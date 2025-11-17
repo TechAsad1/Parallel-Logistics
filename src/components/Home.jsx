@@ -4,16 +4,22 @@ import "../../node_modules/bootstrap/dist/css/bootstrap.min.css";
 import "../../node_modules/bootstrap/dist/js/bootstrap.min.js";
 import {
   DesktopOutlined,
+  DockerOutlined,
   DoubleLeftOutlined,
   DoubleRightOutlined,
   FileOutlined,
+  SwitcherOutlined,
   TeamOutlined,
+  UsergroupAddOutlined,
   UserOutlined,
 } from '@ant-design/icons';
 import { Layout, Menu, Button } from 'antd';
 import { Link, Outlet, Route, Routes } from 'react-router-dom';
 import Export from './export/Export.jsx';
 import NewJob from './export/NewJob.jsx';
+import Jobs from './export/Jobs.jsx';
+import Users from './users/Users.jsx';
+import NewUser from './users/NewUser.jsx';
 
 const { Content, Sider } = Layout;
 function getItem(label, key, icon, children) {
@@ -25,18 +31,14 @@ function getItem(label, key, icon, children) {
   };
 }
 const items = [
-  getItem("Jobs", '1', <DesktopOutlined />, [
-    getItem(<Link to="/job">Job</Link>, "2"),
+  getItem("Jobs", '1', <DockerOutlined />, [
+    getItem(<Link to="/jobs">Jobs</Link>, "2"),
     getItem(<Link to="/newJob">New Job</Link>, "3")
   ]),
-  getItem('Option 2', '4', <DesktopOutlined />),
-  getItem('User', 'sub1', <UserOutlined />, [
-    getItem('Tom', '5'),
-    getItem('Bill', '6'),
-    getItem('Alex', '7'),
+  getItem("Users", '4', <UsergroupAddOutlined />, [
+    getItem(<Link to="/users">Users</Link>, "5"),
+    getItem(<Link to="/newUser">New User</Link>, "6")
   ]),
-  getItem('Team', 'sub2', <TeamOutlined />, [getItem('Team 1', '8'), getItem('Team 2', '9')]),
-  getItem('Files', '10', <FileOutlined />),
 ];
 // import { format } from "date-fns";
 // import { DatePicker } from "antd";
@@ -60,8 +62,10 @@ const Home = () => {
         </Sider>
         <Layout>
           <Routes>
-            <Route path="/job" element={<Export />} />
+            <Route path="/jobs" element={<Jobs />} />
             <Route path="/newJob" element={<NewJob />} />
+            <Route path="/users" element={<Users />} />
+            <Route path="/newUser" element={<NewUser />} />
           </Routes>
           <Outlet />
         </Layout>

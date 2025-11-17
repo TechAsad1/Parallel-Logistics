@@ -1,8 +1,10 @@
 
 import Swal from 'sweetalert2';
-import { Button, Layout, theme, Select,Typography } from 'antd';
+import { Button, Layout, theme, Select, Typography, Flex, Row, Col, DatePicker } from 'antd';
 import { Link } from 'react-router-dom';
 import Search from 'antd/es/transfer/search';
+import { Form, Input, InputNumber } from 'antd';
+import dayjs from 'dayjs';
 
 const { Content } = Layout;
 
@@ -90,6 +92,28 @@ function NewJob() {
         { value: "oldest", label: "Oldest" },
     ];
 
+    const layout = {
+        labelCol: { span: 16 },
+        wrapperCol: { span: 8 },
+    };
+
+    const validateMessages = {
+        required: '${label} is required!',
+        types: {
+            email: '${label} is not a valid email!',
+            number: '${label} is not a valid number!',
+        },
+        number: {
+            range: '${label} must be between ${min} and ${max}',
+        },
+    };
+
+    const onFinish = (values: any) => {
+        alert("Submited!");
+    };
+
+    const dateFormat = 'YYYY/MM/DD';
+
     return (
         <Content style={{ margin: '0 16px' }}>
 
@@ -97,7 +121,7 @@ function NewJob() {
                 <div>
                     <h5>New Job</h5>
                 </div>
-                <Button type="primary">Back To Jobs</Button>
+                <Link to="/jobs"><Button type="primary">Back To Jobs</Button></Link>
             </div>
             <div
                 style={{
@@ -107,6 +131,142 @@ function NewJob() {
                     borderRadius: borderRadiusLG,
                 }}
             >
+
+                <Form
+                    name="nest-messages"
+                    onFinish={onFinish}
+                    validateMessages={validateMessages}
+                    layout="vertical"
+                >
+                    <Row gutter={16}>
+                        <Col span={6}>
+                            <Form.Item name={['user', 'email']} label="Job No" rules={[{ type: 'email' }]}>
+                                <Input />
+                            </Form.Item>
+                        </Col>
+
+                        <Col span={6}>
+                            <Form.Item name={['user', 'name']} label="Date" rules={[{ required: true }]}>
+                                <DatePicker defaultValue={dayjs('2015/01/01', dateFormat)} format={dateFormat} style={{width:"100%"}} />
+                            </Form.Item>
+                        </Col>
+
+                        <Col span={12}>
+                            <Form.Item name={['user', 'website']} label="SI Cutt Of Date">
+                                <DatePicker defaultValue={dayjs('2015/01/01', dateFormat)} format={dateFormat} style={{width:"100%"}} />
+                            </Form.Item>
+                        </Col>
+
+                        <Col span={12}>
+                            <Form.Item name={['user', 'age']} label="Job Type" rules={[{ type: 'number', min: 0, max: 99 }]}>
+                                <InputNumber style={{ width: "100%" }} />
+                            </Form.Item>
+                        </Col>
+
+                        <Col span={12}>
+                            <Form.Item name={['user', 'website']} label="Cutt Of Date Vessel">
+                                <DatePicker defaultValue={dayjs('2015/01/01', dateFormat)} format={dateFormat} style={{width:"100%"}} />
+                            </Form.Item>
+                        </Col>
+
+                        <Col span={12}>
+                            <Form.Item name={['user', 'website']} label="Customer">
+                                <Input />
+                            </Form.Item>
+                        </Col>
+
+
+                        <Col span={12}>
+                            <Form.Item name={['user', 'website']} label="Cargo Details">
+                                <Input />
+                            </Form.Item>
+                        </Col>
+
+                        <Col span={12}>
+                            <Form.Item name={['user', 'website']} label="Gross Weight">
+                                <Input />
+                            </Form.Item>
+                        </Col>
+
+                        <Col span={12}>
+                            <Form.Item name={['user', 'website']} label="Net Weight">
+                                <Input />
+                            </Form.Item>
+                        </Col>
+
+                        <Col span={12}>
+                            <Form.Item name={['user', 'website']} label="No Of Container">
+                                <Input />
+                            </Form.Item>
+                        </Col>
+
+                        <Col span={12}>
+                            <Form.Item name={['user', 'website']} label="Port Of Loading-POL">
+                                <Input />
+                            </Form.Item>
+                        </Col>
+
+                        <Col span={12}>
+                            <Form.Item name={['user', 'website']} label="Port Of Discharge-POD">
+                                <Input />
+                            </Form.Item>
+                        </Col>
+
+                        <Col span={12}>
+                            <Form.Item name={['user', 'website']} label="ETD POL">
+                                <Input />
+                            </Form.Item>
+                        </Col>
+
+                        <Col span={12}>
+                            <Form.Item name={['user', 'website']} label="ETA-POD">
+                                <Input />
+                            </Form.Item>
+                        </Col>
+
+                        <Col span={12}>
+                            <Form.Item name={['user', 'website']} label="Loading Term">
+                                <Input />
+                            </Form.Item>
+                        </Col>
+
+                        <Col span={12}>
+                            <Form.Item name={['user', 'website']} label="Shipping Line">
+                                <Input />
+                            </Form.Item>
+                        </Col>
+
+                        <Col span={12}>
+                            <Form.Item name={['user', 'website']} label="Vessel">
+                                <Input />
+                            </Form.Item>
+                        </Col>
+
+                        <Col span={12}>
+                            <Form.Item name={['user', 'website']} label="Transit Time-Days">
+                                <Input />
+                            </Form.Item>
+                        </Col>
+
+                        <Col span={12}>
+                            <Form.Item name={['user', 'website']} label="Free Days At POD">
+                                <Input />
+                            </Form.Item>
+                        </Col>
+
+                        <Col span={24}>
+                            <Form.Item name={['user', 'introduction']} label="Comments">
+                                <Input.TextArea />
+                            </Form.Item>
+                        </Col>
+
+                    </Row>
+
+                    <Form.Item>
+                        <Button type="primary" htmlType="submit">Submit</Button>
+                    </Form.Item>
+                </Form>
+
             </div>
         </Content>
     )
