@@ -1,0 +1,24 @@
+.leftMenu {
+    float: left;
+}
+.rightSide {
+    padding: 5px;
+}
+.header {
+    padding: 15px;
+}
+.custom-collapse-btn {
+  position: absolute;
+  bottom: 0px;
+  left: 0px;
+  z-index: 1000;
+  transition: all 0.3s;
+  width: 100%;
+  border-radius: 0;
+  background: lightgray;
+}
+.searchArea {
+    border-bottom: 2px solid #f5f5f5;
+    padding: 10px;
+    margin-bottom: 15px;
+}
