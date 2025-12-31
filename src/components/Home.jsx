@@ -20,6 +20,9 @@ import NewJob from './export/NewJob.jsx';
 import Jobs from './export/Jobs.jsx';
 import Users from './users/Users.jsx';
 import NewUser from './users/NewUser.jsx';
+import JobDetail from './export/JobDetail.jsx';
+import EditJob from './export/EditJob.jsx';
+import Testing from './export/Testing.jsx';
 
 const { Content, Sider } = Layout;
 function getItem(label, key, icon, children) {
@@ -63,6 +66,9 @@ const Home = () => {
         <Layout>
           <Routes>
             <Route path="/jobs" element={<Jobs />} />
+            <Route path="/testing" element={<Testing />} />
+            <Route path="/editJob/:id" element={<EditJob />} />
+            <Route path="/jobDetail/:id" element={<JobDetail />} />
             <Route path="/newJob" element={<NewJob />} />
             <Route path="/users" element={<Users />} />
             <Route path="/newUser" element={<NewUser />} />

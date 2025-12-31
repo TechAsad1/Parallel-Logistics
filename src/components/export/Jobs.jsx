@@ -1,19 +1,41 @@
 
 import Swal from 'sweetalert2';
-import { Breadcrumb, Button, Table, Layout, theme, Select,Typography } from 'antd';
+import { Button, Table, Layout, theme, Select, Typography } from 'antd';
 import { Link } from 'react-router-dom';
 import Search from 'antd/es/transfer/search';
 import {
-    DoubleRightOutlined
+    DeleteFilled,
+    EditFilled,
+    EyeFilled
 } from '@ant-design/icons';
+import { useDispatch, useSelector } from 'react-redux';
+import { useEffect, useState } from 'react';
+import { getCargo, getCustomer, getJob, getJobType } from '../../redux/Action';
+import { formatDateString } from '../Helper';
 
 const { Content } = Layout;
 
 const { Text } = Typography;
 
 function Jobs() {
-    // const dispatch = useDispatch();
-    // const postData1 = useSelector((state) => state.area);
+
+    const dispatch = useDispatch();
+    const jobArrs = useSelector((state) => state.jobArr);
+    const customerArrs = useSelector((state) => state.customerArr);
+    const jobTypeArrs = useSelector((state) => state.jobTypeArr);
+    const cargoDetailArrs = useSelector((state) => state.cargoDetailArr);
+
+    useEffect(() => {
+        dispatch(getCargo());
+        dispatch(getJob());
+        dispatch(getCustomer());
+        dispatch(getJobType());
+    }, []);
+
+    useEffect(() => {
+        setRawData(jobArrs);
+    }, [jobArrs]);
+
     const {
         token: { colorBgContainer, borderRadiusLG },
     } = theme.useToken();
@@ -43,46 +65,44 @@ function Jobs() {
             }
         });
     };
+    const oldandlatestvalue = [
+        { value: "date", label: "Sort by Date" },
+        { value: "newest", label: "Newest" },
+        { value: "oldest", label: "Oldest" },
+    ];
     const columns = [
         {
-            title: "Month",
-            dataIndex: "areaName",
-            sorter: (a, b) => a.areaName.length - b.areaName.length,
+            title: "Date",
+            dataIndex: "date",
+            render: (x) => (<span>{formatDateString(x)}</span>),
+            sorter: (a, b) => a.date.length - b.date.length,
         },
         {
-            title: "Job",
-            dataIndex: "areaName",
-            sorter: (a, b) => a.areaName.length - b.areaName.length,
+            title: "CustomerName",
+            dataIndex: "customerId",
+            render: (customerId) => {
+                const r = customerArrs.find(i => i.customerId === customerId);
+                return r ? r.customerName : "";
+            },
+            sorter: (a, b) => a.customerId.length - b.customerId.length,
         },
         {
-            title: "Customer",
-            dataIndex: "areaName",
-            sorter: (a, b) => a.areaName.length - b.areaName.length,
+            title: "JobType",
+            dataIndex: "jobTypeId",
+            render: (x) => {
+                const r = jobTypeArrs.find(i => i.jobTypeId === x);
+                return r ? r.jobTypeDesc : "";
+            },
+            sorter: (a, b) => a.jobTypeId.length - b.jobTypeId.length,
         },
         {
-            title: "POL",
-            dataIndex: "areaName",
-            sorter: (a, b) => a.areaName.length - b.areaName.length,
-        },
-        {
-            title: "BI Number",
-            dataIndex: "areaName",
-            sorter: (a, b) => a.areaName.length - b.areaName.length,
-        },
-        {
-            title: "Commodity",
-            dataIndex: "areaName",
-            sorter: (a, b) => a.areaName.length - b.areaName.length,
-        },
-        {
-            title: "CTN",
-            dataIndex: "areaName",
-            sorter: (a, b) => a.areaName.length - b.areaName.length,
-        },
-        {
-            title: "GD",
-            dataIndex: "areaName",
-            sorter: (a, b) => a.areaName.length - b.areaName.length,
+            title: "CargoDetail",
+            dataIndex: "cargoDetailId",
+            render: (x) => {
+                const r = cargoDetailArrs.find(i => i.cargoId === x);
+                return r ? r.cargoDetailDesc : "";
+            },
+            sorter: (a, b) => a.cargoDetailId.length - b.cargoDetailId.length,
         },
         {
             title: "Actions",
@@ -90,32 +110,21 @@ function Jobs() {
             render: (_, record) => (
                 <div className="action-table-data">
                     <div className="edit-delete-action">
-                        <Link
-                            className="me-2 p-2"
-                            to="#"
-                            data-bs-toggle="modal"
-                            data-bs-target="#edit-area"
-                        // onClick={(e) => updateHandle(e, record.areaId)}
-                        >
-                            <i data-feather="edit" className="feather-edit"></i>
+                        <Link className="me-2 p-2" to={`/jobDetail/${record.id}`}>
+                            <EyeFilled style={{ color: "#444" }} />
+                        </Link>
+                        <Link className="me-2 p-2" to={`/editJob/${record.id}`}>
+                            <EditFilled style={{ color: "#444" }} />
                         </Link>
                         <Link className="confirm-text p-2" to="#">
-                            <i
-                                data-feather="trash-2"
-                                className="feather-trash-2"
-                                onClick={(e) => showConfirmationAlert()}
-                            ></i>
+                            <DeleteFilled onClick={(e) => showConfirmationAlert()} style={{ color: "#444" }} />
                         </Link>
                     </div>
                 </div>
             ),
         },
     ];
-    const oldandlatestvalue = [
-        { value: "date", label: "Sort by Date" },
-        { value: "newest", label: "Newest" },
-        { value: "oldest", label: "Oldest" },
-    ];
+    const [rawData, setRawData] = useState([]);
 
     return (
         <Content style={{ margin: '0 16px' }}>
@@ -149,7 +158,10 @@ function Jobs() {
                     </div>
                 </div>
                 <div className="table-responsive">
-                    <Table columns={columns} dataSource={""} />
+                    <Table columns={columns}
+                        dataSource={Array.isArray(rawData) ? rawData : []}
+                        rowKey="id"
+                    />
                 </div>
             </div>
         </Content>

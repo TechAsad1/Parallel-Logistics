@@ -1,20 +1,20 @@
 
 import Swal from 'sweetalert2';
 import { Button, Layout, theme, Select, Typography, Row, Col, DatePicker } from 'antd';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { Form, Input, InputNumber } from 'antd';
 import dayjs from 'dayjs';
 import { useEffect, useState } from 'react';
 import { formatDate } from '../Helper';
 import { useDispatch, useSelector } from 'react-redux';
-import { getCargo, getCustomer, getGrossWeight, getJobType, getLoadingTerm, getNetWeight, getNoOfContainer, getPortOfDischarge, getPortOfLoading, getShippingLine, getVessel, insertJob, maxIdJob } from '../../redux/Action';
+import { getCargo, getCustomer, getGrossWeight, getJobType, getLoadingTerm, getNetWeight, getNoOfContainer, getPortOfDischarge, getPortOfLoading, getShippingLine, getVessel, insertJob, jobById, maxIdJob, updateJob } from '../../redux/Action';
 // import { format } from "date-fns";
 
 const { Content } = Layout;
 
 const { Text } = Typography;
 
-function NewJob() {
+function EditJob() {
     const dispatch = useDispatch();
     const cargoDetailArrs = useSelector((state) => state.cargoDetailArr);
     const customerArrs = useSelector((state) => state.customerArr);
@@ -27,7 +27,10 @@ function NewJob() {
     const portOfLoadingArrs = useSelector((state) => state.portOfLoadingArr);
     const shippingLineArrs = useSelector((state) => state.shippingLineArr);
     const vesselArrs = useSelector((state) => state.vesselArr);
-    const maxIdState = useSelector((state) => state.maxId);
+    const jobArr = useSelector((state) => state.jobArr);
+    const { id } = useParams();
+
+    const [forms] = Form.useForm();
 
     const initialForm = {
         id: "",
@@ -66,18 +69,14 @@ function NewJob() {
         dispatch(getShippingLine());
         dispatch(getVessel());
         dispatch(getJobType());
-        dispatch(maxIdJob());
     }
 
     useEffect(() => {
         loadStates();
     }, []);
 
-
-
     //CargoDetail
     useEffect(() => {
-        setCargoOpt([]); // Reset
         setCargoOpt(() => [
             ...cargoDetailArrs.map((x) => ({
                 value: x.cargoId,
@@ -88,7 +87,6 @@ function NewJob() {
 
     //Customer
     useEffect(() => {
-        setCustomerOpt([]); // Reset
         setCustomerOpt(() => [
             ...customerArrs.map((x) => ({
                 value: x.customerId,
@@ -109,7 +107,6 @@ function NewJob() {
 
     //JobType
     useEffect(() => {
-        setJobTypeOpt([]); // Reset
         setJobTypeOpt(() => [
             ...jobTypeArrs.map((x) => ({
                 value: x.jobTypeId,
@@ -188,68 +185,59 @@ function NewJob() {
         ]);
     }, [vesselArrs]);
 
-    //Max-Id
+    //Job-Id
     useEffect(() => {
-        setMaxId(maxIdState);
-    }, [maxIdState]);
-
+        setJobId(id);
+        if (id)
+            dispatch(jobById(id));
+    }, [id]);
 
     //Options
-    const initialOpt = [{ value: "Choose Option", label: "Choose Option" }];
-    const [cargoOpt, setCargoOpt] = useState();
-    const [customerOpt, setCustomerOpt] = useState();
-    const [grossWeightOpt, setGrossWeightOpt] = useState();
-    const [jobTypeOpt, setJobTypeOpt] = useState();
-    const [loadingTermOpt, setLoadingTermOpt] = useState();
-    const [netWeightOpt, setNetWeightOpt] = useState();
-    const [noOfContainerOpt, setNoOfContainerOpt] = useState();
-    const [portOfDischargeOpt, setPortOfDischargeOpt] = useState();
-    const [portOfLoadingOpt, setPortOfLoadingOpt] = useState();
-    const [shippingLineOpt, setShippingLineOpt] = useState();
-    const [vesselOpt, setVesselOpt] = useState();
+    const [cargoOpt, setCargoOpt] = useState([]);
+    const [customerOpt, setCustomerOpt] = useState([]);
+    const [grossWeightOpt, setGrossWeightOpt] = useState([]);
+    const [jobTypeOpt, setJobTypeOpt] = useState([]);
+    const [loadingTermOpt, setLoadingTermOpt] = useState([]);
+    const [netWeightOpt, setNetWeightOpt] = useState([]);
+    const [noOfContainerOpt, setNoOfContainerOpt] = useState([]);
+    const [portOfDischargeOpt, setPortOfDischargeOpt] = useState([]);
+    const [portOfLoadingOpt, setPortOfLoadingOpt] = useState([]);
+    const [shippingLineOpt, setShippingLineOpt] = useState([]);
+    const [vesselOpt, setVesselOpt] = useState([]);
 
     //Select State
-    const [selectCargo, setSelectCargo] = useState(setCargoOpt);
-    const [selectCustomer, setSelectCustomer] = useState(setCustomerOpt);
-    const [selectGrossWeight, setSelectGrossWeight] = useState(setGrossWeightOpt);
-    const [selectJobType, setSelectJobType] = useState(setJobTypeOpt);
-    const [selectLoadingTerm, setSelectLoadingTerm] = useState(setLoadingTermOpt);
-    const [selectNetWeight, setSelectNetWeight] = useState(setNetWeightOpt);
-    const [selectNoOfContainer, setSelectNoOfContainer] = useState(setNoOfContainerOpt);
-    const [selectPortOfDischarge, setSelectPortOfDischarge] = useState(setPortOfDischargeOpt);
-    const [selectPortOfLoading, setSelectPortOfLoading] = useState(setPortOfLoadingOpt);
-    const [selectShippingLine, setSelectShippingLine] = useState(setShippingLineOpt);
-    const [selectVessel, setSelectVessel] = useState(setVesselOpt);
+    const [selectCargo, setSelectCargo] = useState([]);
+    const [selectCustomer, setSelectCustomer] = useState([]);
+    const [selectGrossWeight, setSelectGrossWeight] = useState([]);
+    const [selectJobType, setSelectJobType] = useState([]);
+    const [selectLoadingTerm, setSelectLoadingTerm] = useState([]);
+    const [selectNetWeight, setSelectNetWeight] = useState([]);
+    const [selectNoOfContainer, setSelectNoOfContainer] = useState([]);
+    const [selectPortOfDischarge, setSelectPortOfDischarge] = useState([]);
+    const [selectPortOfLoading, setSelectPortOfLoading] = useState([]);
+    const [selectShippingLine, setSelectShippingLine] = useState([]);
+    const [selectVessel, setSelectVessel] = useState([]);
 
     const [form, setForm] = useState(initialForm);
     const resetForm = () => setForm(initialForm);
 
-    const [maxId, setMaxId] = useState("");
+    const [jobId, setJobId] = useState("");
 
     //Select Func
     const setSelectCargoFunc = (val, opt) => {
-        if (!val || val.length === 0) {
-            setSelectCargo(null);
+        if (!val || val?.length === 0) {
+            setSelectCargo([]);
             setForm({ ...form, cargoDetailId: 0, cargoDetailName: "" });
             return;
         }
-        if (val.length > 1) return;
         if (!opt[0].value) {
             const name = val[0];
             setSelectCargo([name]);
-            setForm({
-                ...form,
-                cargoDetailId: 0,
-                cargoDetailName: name
-            });
+            setForm({ ...form, cargoDetailId: 0, cargoDetailName: name });
         }
         else {
             setSelectCargo([opt[0].value]);
-            setForm({
-                ...form,
-                cargoDetailId: opt[0].value,
-                cargoDetailName: opt[0].label
-            });
+            setForm({ ...form, cargoDetailId: opt[0].value, cargoDetailName: opt[0].label });
         }
     };
     const setSelectJobTypeFunc = (val, opt) => {
@@ -487,8 +475,93 @@ function NewJob() {
         }
     }
 
+    //Fetch Data
+    useEffect(() => {
+        if (jobArr) {
+            let job = [];
+            let cargo = [];
+            let customer = [];
+            console.log(jobArr);
+            if (jobArr.jobTypeId > 0)
+                job = jobTypeArrs.find((i) => i.jobTypeId === jobArr.jobTypeId);
+            if (jobArr.cargoDetailId > 0)
+                cargo = cargoDetailArrs.find((i) => i.cargoId === jobArr.cargoDetailId);
+            if (jobArr.customerId > 0)
+                customer = customerArrs.find((i) => i.customerId === jobArr.customerId);
+
+            if (jobTypeOpt) {
+                const opt = jobTypeOpt.find((i) => i.label === job.jobTypeDesc);
+                setSelectJobType(opt);
+                forms.setFieldsValue({
+                    JobType: [opt]
+                });
+            }
+
+            if (customerOpt) {
+                const opt = customerOpt.find((i) => i.value === customer.customerId);
+                setSelectCustomer(opt);
+                forms.setFieldsValue({
+                    Customer: [opt]
+                });
+            }
+
+            if (cargoOpt) {
+                const opt = cargoOpt.find((i) => i.label === cargo.cargoDetailDesc);
+                setSelectCargo(opt);
+                forms.setFieldsValue({
+                    CargoDetail: [opt]
+                });
+            }
+
+            forms.setFieldsValue({
+                Comments: jobArr.comment,
+                GrossWeight: jobArr.grossWeight,
+                LoadingTerm: jobArr.loadingTerm,
+                NetWeight: jobArr.netWeight,
+                NoOfContainer: jobArr.numberOfContainer,
+                PortOfDischarge: jobArr.portOfDischarge,
+                PortOfLoading: jobArr.portOfLoading,
+                ShippingLine: jobArr.shippingLine,
+                TransitTimeDays: jobArr.transitTimeDays,
+                Vessel: jobArr.vessel,
+                FreeDaysAtPod: jobArr.freeDaysAtPod,
+                EtaPod: jobArr?.etaPod ? dayjs(jobArr.etaPod) : null,
+                EtdPol: jobArr?.etdPol ? dayjs(jobArr.etdPol) : null,
+                CuttOfDate: jobArr?.cuttOfDate ? dayjs(jobArr.cuttOfDate) : null,
+                CuttOfDateVessel: jobArr?.cuttOfDateVessel ? dayjs(jobArr.cuttOfDateVessel) : null,
+                Dates: jobArr?.date ? dayjs(jobArr.date) : null,
+            });
+
+            setForm({
+                ...form,
+                cargoDetailId: jobArr.cargoDetailId,
+                cargoDetailName: cargo.cargoDetailDesc,
+                cuttDate: form.cuttDate,
+                vesselDate: form.vesselDate,
+                polDate: form.polDate,
+                podDate: form.podDate,
+                date: new Date(),
+                jobTypeId: jobArr.jobTypeId,
+                jobType: job.jobTypeDesc,
+                customerId: customer.customerId,
+                customerName: customer.customerName,
+                grossWeight: jobArr.grossWeight,
+                netWeight: jobArr.netWeight,
+                noOfContainer: jobArr.numberOfContainer,
+                portOfLoading: jobArr.portOfLoading,
+                portOfDischarge: jobArr.portOfDischarge,
+                loadingTerm: jobArr.loadingTerm,
+                shippingLine: jobArr.shippingLine,
+                vessel: jobArr.vessel,
+                days: jobArr.transitTimeDays,
+                freeDays: jobArr.freeDaysAtPod,
+                comment: jobArr.comment
+            });
+        }
+    }, [jobArr]);
+
     //============= INSERT ============
-    const insertFunc = () => {
+    const updateFunc = () => {
         const jobDTO = {
             id: "0",
             userId: "0",
@@ -515,7 +588,7 @@ function NewJob() {
             customerId: form.customerId,
             customerName: form.customerName,
         };
-        dispatch(insertJob(jobDTO, loadStates, resetFormControls));
+        dispatch(updateJob(id, jobDTO, loadStates));
     }
 
     const {
@@ -563,9 +636,10 @@ function NewJob() {
         },
     };
 
-    const onFinish = (values: any) => {
-        insertFunc();
-        // alert("Submited!");
+    const onFinish = (values: any) => updateFunc();
+
+    const handleChange = value => {
+        console.log(`selected ${value}`);
     };
 
     const options = [];
@@ -577,10 +651,6 @@ function NewJob() {
     }
 
     const dateFormat = 'YYYY/MM/DD';
-
-    const [forms] = Form.useForm();
-
-    const resetFormControls = () => forms.resetFields();
 
     return (
         <Content style={{ margin: '0 16px' }}>
@@ -599,7 +669,6 @@ function NewJob() {
                     borderRadius: borderRadiusLG,
                 }}
             >
-
                 <Form
                     name="nest-messages"
                     onFinish={onFinish}
@@ -610,30 +679,30 @@ function NewJob() {
                     <Row gutter={16}>
                         <Col span={6}>
                             <Form.Item label="Job No">
-                                <Input readOnly value={maxId} />
+                                <Input readOnly value={jobId} />
                             </Form.Item>
                         </Col>
 
                         <Col span={6}>
-                            <Form.Item label="Date">
+                            <Form.Item name="Dates" label="Date">
                                 <DatePicker defaultValue={dayjs(formatDate(new Date()), dateFormat)} format={dateFormat} style={{ width: "100%" }} />
                             </Form.Item>
                         </Col>
 
                         <Col span={6}>
-                            <Form.Item label="SI Cutt Of Date">
+                            <Form.Item name="CuttOfDate" label="SI Cutt Of Date">
                                 <DatePicker defaultValue={dayjs(formatDate(form.cuttDate), dateFormat)} format={dateFormat} style={{ width: "100%" }} />
                             </Form.Item>
                         </Col>
 
                         <Col span={6}>
-                            <Form.Item label="Cutt Of Date Vessel">
+                            <Form.Item name="CuttOfDateVessel" label="Cutt Of Date Vessel">
                                 <DatePicker defaultValue={dayjs(formatDate(form.vesselDate), dateFormat)} format={dateFormat} style={{ width: "100%" }} />
                             </Form.Item>
                         </Col>
 
                         <Col span={12}>
-                            <Form.Item name={['user', 'Job Type']} label="Job Type" rules={[{ required: true }]}>
+                            <Form.Item name="JobType" label="Job Type" rules={[{ required: true }]}>
                                 <Select
                                     showSearch
                                     mode="tags"
@@ -647,25 +716,26 @@ function NewJob() {
                         </Col>
 
                         <Col span={6}>
-                            <Form.Item label="ETD POL">
+                            <Form.Item name="EtdPol" label="ETD POL">
                                 <DatePicker defaultValue={dayjs(formatDate(form.polDate), dateFormat)} format={dateFormat} style={{ width: "100%" }} />
                             </Form.Item>
                         </Col>
 
                         <Col span={6}>
-                            <Form.Item label="ETA-POD">
+                            <Form.Item name="EtaPod" label="ETA-POD">
                                 <DatePicker defaultValue={dayjs(formatDate(form.podDate), dateFormat)} format={dateFormat} style={{ width: "100%" }} />
                             </Form.Item>
                         </Col>
 
                         <Col span={12}>
-                            <Form.Item name={['user', 'Customer']} label="Customer" rules={[{ required: true }]}>
+                            <Form.Item name="Customer" label="Customer" rules={[{ required: true }]}>
                                 <Select
+                                    labelInValue
                                     allowClear
                                     mode="tags"
+                                    maxCount={1}
                                     maxTagCount={1}
                                     style={{ width: '100%' }}
-                                    tokenSeparators={[',']}
                                     variant="underlined"
                                     placeholder="Type to find a customer..."
                                     options={customerOpt || []}
@@ -676,12 +746,14 @@ function NewJob() {
                         </Col>
 
                         <Col span={12}>
-                            <Form.Item name={['user', 'Cargo Details']} label="Cargo Details" rules={[{ required: true }]}>
+                            <Form.Item name="CargoDetail" label="Cargo Details" rules={[{ required: true }]}>
                                 <Select
+                                    labelInValue
                                     allowClear
                                     showSearch
                                     mode="tags"
                                     maxTagCount={1}
+                                    maxCount={1}
                                     placeholder="Choose Option"
                                     options={cargoOpt || []}
                                     value={selectCargo}
@@ -691,7 +763,7 @@ function NewJob() {
                         </Col>
 
                         <Col span={12}>
-                            <Form.Item name={['user', 'Gross Weight']} label="Gross Weight">
+                            <Form.Item name="GrossWeight" label="Gross Weight">
                                 <Select
                                     allowClear
                                     showSearch
@@ -706,7 +778,7 @@ function NewJob() {
                         </Col>
 
                         <Col span={12}>
-                            <Form.Item name={['user', 'Net Weight']} label="Net Weight">
+                            <Form.Item name="NetWeight" label="Net Weight">
                                 <Select
                                     mode="tags"
                                     maxTagCount={1}
@@ -720,7 +792,7 @@ function NewJob() {
                         </Col>
 
                         <Col span={12}>
-                            <Form.Item name={['user', 'No Of Container']} label="No Of Container">
+                            <Form.Item name="NoOfContainer" label="No Of Container">
                                 <Select
                                     mode="tags"
                                     maxTagCount={1}
@@ -734,7 +806,7 @@ function NewJob() {
                         </Col>
 
                         <Col span={12}>
-                            <Form.Item name={['user', 'Port Of Loading']} label="Port Of Loading-POL">
+                            <Form.Item name="PortOfLoading" label="Port Of Loading-POL">
                                 <Select
                                     mode="tags"
                                     maxTagCount={1}
@@ -748,7 +820,7 @@ function NewJob() {
                         </Col>
 
                         <Col span={12}>
-                            <Form.Item name={['user', 'Port Of Discharge']} label="Port Of Discharge-POD">
+                            <Form.Item name="PortOfDischarge" label="Port Of Discharge-POD">
                                 <Select
                                     mode="tags"
                                     maxTagCount={1}
@@ -762,7 +834,7 @@ function NewJob() {
                         </Col>
 
                         <Col span={12}>
-                            <Form.Item name={['user', 'Loading Term']} label="Loading Term">
+                            <Form.Item name="LoadingTerm" label="Loading Term">
                                 <Select
                                     mode="tags"
                                     maxTagCount={1}
@@ -776,7 +848,7 @@ function NewJob() {
                         </Col>
 
                         <Col span={12}>
-                            <Form.Item name={['user', 'Shipping Line']} label="Shipping Line">
+                            <Form.Item name="ShippingLine" label="Shipping Line">
                                 <Select
                                     mode="tags"
                                     maxTagCount={1}
@@ -790,7 +862,7 @@ function NewJob() {
                         </Col>
 
                         <Col span={12}>
-                            <Form.Item name={['user', 'Vessel']} label="Vessel">
+                            <Form.Item name="Vessel" label="Vessel">
                                 <Select
                                     mode="tags"
                                     maxTagCount={1}
@@ -804,19 +876,19 @@ function NewJob() {
                         </Col>
 
                         <Col span={12}>
-                            <Form.Item name={['user', 'Transit Time-Days']} label="Transit Time-Days">
+                            <Form.Item name="TransitTimeDays" label="Transit Time-Days">
                                 <Input value={form.days} onChange={(e) => setForm({ ...form, days: e.target.value })} />
                             </Form.Item>
                         </Col>
 
                         <Col span={12}>
-                            <Form.Item name={['user', 'Free Days At POD']} label="Free Days At POD" rules={[{ type: 'number', min: 0, max: 99 }]}>
+                            <Form.Item name="FreeDaysAtPod" label="Free Days At POD" rules={[{ type: 'number', min: 0, max: 99 }]}>
                                 <InputNumber value={form.freeDays} onChange={(e) => setForm({ ...form, freeDays: e })} style={{ width: "100%" }} />
                             </Form.Item>
                         </Col>
 
                         <Col span={24}>
-                            <Form.Item name={['user', 'Comments']} label="Comments">
+                            <Form.Item name="Comments" label="Comments">
                                 <Input.TextArea value={form.comment} onChange={(e) => setForm({ ...form, comment: e.target.value })} />
                             </Form.Item>
                         </Col>
@@ -832,4 +904,4 @@ function NewJob() {
         </Content>
     )
 }
-export default NewJob;
+export default EditJob;

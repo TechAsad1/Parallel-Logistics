@@ -1,19 +1,21 @@
 
 import Swal from 'sweetalert2';
-import { Breadcrumb, Button, Table, Layout, theme, Select,Typography } from 'antd';
+import { Breadcrumb, Button, Table, Layout, theme, Select, Typography } from 'antd';
 import { Link } from 'react-router-dom';
 import Search from 'antd/es/transfer/search';
 import {
     DoubleRightOutlined
 } from '@ant-design/icons';
+import { useDispatch, useSelector } from 'react-redux';
+import { useEffect } from 'react';
+import { getJob } from '../../redux/Action';
 
 const { Content } = Layout;
 
 const { Text } = Typography;
 
 function Export() {
-    // const dispatch = useDispatch();
-    // const postData1 = useSelector((state) => state.area);
+
     const {
         token: { colorBgContainer, borderRadiusLG },
     } = theme.useToken();
@@ -43,11 +45,32 @@ function Export() {
             }
         });
     };
+    const oldandlatestvalue = [
+        { value: "date", label: "Sort by Date" },
+        { value: "newest", label: "Newest" },
+        { value: "oldest", label: "Oldest" },
+    ];
+
     const columns = [
         {
-            title: "AreaName",
-            dataIndex: "areaName",
-            sorter: (a, b) => a.areaName.length - b.areaName.length,
+            title: "Date",
+            dataIndex: "date",
+            sorter: (a, b) => a.date.length - b.date.length,
+        },
+        {
+            title: "CustomerName",
+            dataIndex: "customerName",
+            sorter: (a, b) => a.customerName.length - b.customerName.length,
+        },
+        {
+            title: "JobType",
+            dataIndex: "jobType",
+            sorter: (a, b) => a.jobType.length - b.jobType.length,
+        },
+        {
+            title: "CargoDetail",
+            dataIndex: "cargoDetail",
+            sorter: (a, b) => a.cargoDetail.length - b.cargoDetail.length,
         },
         // {
         //   title: "Status",
@@ -87,11 +110,13 @@ function Export() {
             ),
         },
     ];
-    const oldandlatestvalue = [
-        { value: "date", label: "Sort by Date" },
-        { value: "newest", label: "Newest" },
-        { value: "oldest", label: "Oldest" },
-    ];
+
+    const dispatch = useDispatch();
+    const jobArrs = useSelector((state) => state.jobArr);
+
+    useEffect(() => {
+        dispatch(getJob());
+    }, []);
 
     return (
         <Content style={{ margin: '0 16px' }}>
@@ -125,7 +150,7 @@ function Export() {
                     </div>
                 </div>
                 <div className="table-responsive">
-                    <Table columns={columns} dataSource={""} />
+                    <Table columns={columns} dataSource={jobArrs} />
                 </div>
             </div>
         </Content>

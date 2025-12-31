@@ -22,3 +22,7 @@
     padding: 10px;
     margin-bottom: 15px;
 }
+
+.detailTB tr td {
+    color: #092c4c;
+}
