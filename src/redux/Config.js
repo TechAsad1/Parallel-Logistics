@@ -1,6 +1,6 @@
 const Config = {
-    url: "https://membership.bsite.net/api/",
-    urlImage: "https://membership.bsite.net/",
+    url: "http://membership.bsite.net/api/",
+    urlImage: "http://membership.bsite.net/",
     // url: "http://localhost:5259/api/",
     // urlImage: "http://localhost:5259/",
 };
