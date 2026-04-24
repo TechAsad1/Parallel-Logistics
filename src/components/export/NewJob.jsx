@@ -1,6 +1,6 @@
 
 import Swal from 'sweetalert2';
-import { Button, Layout, theme, Select, Typography, Row, Col, DatePicker } from 'antd';
+import { Button, Layout, theme, Select, Typography, Row, Col, DatePicker, Modal, Divider, Table, Space } from 'antd';
 import { Link } from 'react-router-dom';
 import { Form, Input, InputNumber } from 'antd';
 import dayjs from 'dayjs';
@@ -9,6 +9,14 @@ import { formatDate } from '../Helper';
 import { useDispatch, useSelector } from 'react-redux';
 import { getCargo, getCustomer, getGrossWeight, getJobType, getLoadingTerm, getNetWeight, getNoOfContainer, getPortOfDischarge, getPortOfLoading, getShippingLine, getVessel, insertJob, maxIdJob } from '../../redux/Action';
 // import { format } from "date-fns";
+import html2canvas from "html2canvas";
+import jsPDF from "jspdf";
+import React from "react";
+import { Navigate } from "react-router-dom";
+import logo from '../images/logo.jpeg';
+import { CgSoftwareDownload } from "react-icons/cg";
+import { FaEye } from "react-icons/fa";
+import SideBar from '../SideBar.jsx'
 
 const { Content } = Layout;
 
@@ -29,28 +37,32 @@ function NewJob() {
     const vesselArrs = useSelector((state) => state.vesselArr);
     const maxIdState = useSelector((state) => state.maxId);
 
+    const user = localStorage.getItem("user");
+
+    const [forms] = Form.useForm();
+
+
     const initialForm = {
-        id: "",
+        jobId: "",
+        createdBy: 1,
+        customerId: "",
+        cargoDetail: "",
+        jobType: "",
+        customerName: "",
+        portOfLoading: "",
+        portOfDischarge: "",
+        loadingTerm: "",
+        vessel: "",
         cuttDate: new Date(),
         vesselDate: new Date(),
         polDate: new Date(),
         podDate: new Date(),
-        jobTypeId: 0,
-        jobType: "",
-        customerId: 0,
-        customerName: "",
-        cargoDetailId: 0,
-        cargoDetailName: "",
         grossWeight: "",
         netWeight: "",
         noOfContainer: "",
-        portOfLoading: "",
-        portOfDischarge: "",
-        loadingTerm: "",
         shippingLine: "",
-        vessel: "",
-        days: 0,
-        freeDays: 0,
+        transitTimeDays: 0,
+        freeDaysAtPod: 0,
         comment: "",
     };
 
@@ -70,9 +82,15 @@ function NewJob() {
     }
 
     useEffect(() => {
+        forms.setFieldsValue({
+            Dates: dayjs(),
+            CuttOfDate: dayjs(),
+            CuttOfDateVessel: dayjs(),
+            EtdPol: dayjs(),
+            EtaPod: dayjs()
+        });
         loadStates();
     }, []);
-
 
 
     //CargoDetail
@@ -80,7 +98,7 @@ function NewJob() {
         setCargoOpt([]); // Reset
         setCargoOpt(() => [
             ...cargoDetailArrs.map((x) => ({
-                value: x.cargoId,
+                value: x.cargoDetailDesc,
                 label: x.cargoDetailDesc,
             }))
         ]);
@@ -112,7 +130,7 @@ function NewJob() {
         setJobTypeOpt([]); // Reset
         setJobTypeOpt(() => [
             ...jobTypeArrs.map((x) => ({
-                value: x.jobTypeId,
+                value: x.jobTypeDesc,
                 label: x.jobTypeDesc,
             }))
         ]);
@@ -225,12 +243,13 @@ function NewJob() {
     const resetForm = () => setForm(initialForm);
 
     const [maxId, setMaxId] = useState("");
+    const [insertJobArr, setInsertJobArr] = useState([]);
 
     //Select Func
     const setSelectCargoFunc = (val, opt) => {
         if (!val || val.length === 0) {
             setSelectCargo(null);
-            setForm({ ...form, cargoDetailId: 0, cargoDetailName: "" });
+            setForm({ ...form, cargoDetail: "" });
             return;
         }
         if (val.length > 1) return;
@@ -239,23 +258,21 @@ function NewJob() {
             setSelectCargo([name]);
             setForm({
                 ...form,
-                cargoDetailId: 0,
-                cargoDetailName: name
+                cargoDetail: name
             });
         }
         else {
             setSelectCargo([opt[0].value]);
             setForm({
                 ...form,
-                cargoDetailId: opt[0].value,
-                cargoDetailName: opt[0].label
+                cargoDetail: opt[0].label
             });
         }
     };
     const setSelectJobTypeFunc = (val, opt) => {
         if (!val || val.length === 0) {
             setSelectJobType(null);
-            setForm({ ...form, jobTypeId: 0, jobType: "" });
+            setForm({ ...form, jobType: "" });
             return;
         }
         if (val.length > 1) return;
@@ -264,7 +281,6 @@ function NewJob() {
             setSelectJobType([name]);
             setForm({
                 ...form,
-                jobTypeId: 0,
                 jobType: name
             });
         }
@@ -272,7 +288,6 @@ function NewJob() {
             setSelectJobType([opt[0].value]);
             setForm({
                 ...form,
-                jobTypeId: opt[0].value,
                 jobType: opt[0].label
             });
         }
@@ -280,7 +295,7 @@ function NewJob() {
     const setSelectCustomerFunc = (val, opt) => {
         if (!val || val.length === 0) {
             setSelectCustomer(null);
-            setForm({ ...form, customerId: 0, customerName: "" });
+            setForm({ ...form, customerId: "", customerName: "" });
             return;
         }
         if (val.length > 1) return;
@@ -289,7 +304,7 @@ function NewJob() {
             setSelectCustomer([name]);
             setForm({
                 ...form,
-                customerId: 0,
+                customerId: "",
                 customerName: name
             });
         }
@@ -488,35 +503,35 @@ function NewJob() {
     }
 
     //============= INSERT ============
-    const insertFunc = () => {
+    const insertFunc = (x) => {
         const jobDTO = {
-            id: "0",
-            userId: "0",
-            cargoDetailId: form.cargoDetailId,
-            cargoDetailName: form.cargoDetailName,
-            portOfLoading: form.portOfLoading,
-            portOfDischarge: form.portOfDischarge,
-            loadingTerm: form.loadingTerm,
-            vessel: form.vessel,
-            date: new Date().toISOString(),
-            cuttOfDate: form.cuttDate.toISOString(),
-            cuttOfDateVessel: form.vesselDate.toISOString(),
-            etaPod: form.podDate.toISOString(),
-            etdPol: form.polDate.toISOString(),
-            jobTypeId: form.jobTypeId,
-            jobType: form.jobType,
-            grossWeight: form.grossWeight,
-            netWeight: form.netWeight,
-            numberOfContainer: form.noOfContainer,
-            shippingLine: form.shippingLine,
-            transitTimeDays: form.days,
-            freeDaysAtPod: form.freeDays,
-            comment: form.comment,
+            jobId: "0",
+            createdBy: user,
+            cargoDetail: x.CargoDetail?.[0] ?? "",
+            portOfLoading: x.PortOfLoading?.[0] ?? "",
+            portOfDischarge: x.PortOfDischarge?.[0] ?? "",
+            loadingTerm: x.LoadingTerm?.[0] ?? "",
+            vessel: x.Vessel?.[0] ?? "",
+            date: x.Dates ? x.Dates.toISOString() : new Date().toISOString(),
+            cuttOfDate: x.CuttOfDate ? x.CuttOfDate.toISOString() : new Date().toISOString(),
+            cuttOfDateVessel: x.CuttOfDateVessel ? x.CuttOfDateVessel.toISOString() : new Date().toISOString(),
+            etaPod: x.EtaPod ? x.EtaPod.toISOString() : new Date().toISOString(),
+            etdPol: x.EtdPol ? x.EtdPol.toISOString() : new Date().toISOString(),
+            jobType: x.JobType?.[0] ?? "",
+            grossWeight: x.GrossWeight?.[0] ?? "",
+            netWeight: x.NetWeight?.[0] ?? "",
+            numberOfContainer: x.NoOfContainer?.[0] ?? "",
+            shippingLine: x.ShippingLine?.[0] ?? "",
+            transitTimeDays: x.TransitTimeDays ?? 0,
+            freeDaysAtPod: x.FreeDaysAtPod ?? 0,
+            comment: x.Comments ?? "",
             customerId: form.customerId,
-            customerName: form.customerName,
+            customerName: form.customerName ?? "",
         };
-        dispatch(insertJob(jobDTO, loadStates, resetFormControls));
+        dispatch(insertJob(jobDTO, loadStates, resetFormControls, recordInsertedMessage, setInsertJobArr));
     }
+
+    const [isPDFBtnEnabled, setIsPDFBtnEnabled] = useState(false);
 
     const {
         token: { colorBgContainer, borderRadiusLG },
@@ -564,7 +579,7 @@ function NewJob() {
     };
 
     const onFinish = (values: any) => {
-        insertFunc();
+        insertFunc(values);
         // alert("Submited!");
     };
 
@@ -578,258 +593,405 @@ function NewJob() {
 
     const dateFormat = 'YYYY/MM/DD';
 
-    const [forms] = Form.useForm();
-
     const resetFormControls = () => forms.resetFields();
 
-    return (
-        <Content style={{ margin: '0 16px' }}>
+    const recordInsertedMessage = () => {
+        setIsPDFBtnEnabled(true);
+        Swal.fire({
+            icon: "success",
+            title: "Success",
+            text: "Record Inserted Successfully",
+            timer: 1500,
+            showConfirmButton: false
+        });
+    };
 
-            <div className="header d-flex justify-content-between align-items-center">
-                <div>
-                    <h5>New Job</h5>
-                </div>
-                <Link to="/jobs"><Button type="primary">Back To Jobs</Button></Link>
-            </div>
-            <div
-                style={{
-                    padding: 24,
-                    minHeight: 360,
-                    background: colorBgContainer,
-                    borderRadius: borderRadiusLG,
-                }}
+    //PDF
+    const printRef = React.useRef(null);
+
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const handleDownloadPdf = async () => {
+        const element = printRef.current;
+        if (!element) return;
+
+        const canvas = await html2canvas(element, {
+            scale: 2,
+            backgroundColor: "#ffffff",
+        });
+
+        const imgData = canvas.toDataURL("image/png");
+
+        const pdf = new jsPDF("p", "mm", "a4");
+
+        const pdfWidth = 210;
+        const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+
+        pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
+        pdf.save(`job-${insertJobArr.jobId}.pdf`);
+    };
+    const formValues = forms.getFieldsValue();
+    const columns = [
+        {
+            title: "Cargo Description",
+            dataIndex: "description",
+        },
+        {
+            title: "Quantity",
+            dataIndex: "qty",
+            align: "right",
+        },
+    ];
+
+    if (!user) return <Navigate to="/login" />;
+
+    return (
+        <>
+            <Layout style={{minHeight:'100vh'}}>
+                <SideBar />
+                <Content style={{ margin: '0 16px' }}>
+
+                    <div className="header d-flex justify-content-between align-items-center">
+                        <div>
+                            <h5>New Job</h5>
+                        </div>
+                        <Link to="/jobs"><Button type="primary">Back To Jobs</Button></Link>
+                    </div>
+                    <div
+                        style={{
+                            padding: 24,
+                            minHeight: 360,
+                            background: colorBgContainer,
+                            borderRadius: borderRadiusLG,
+                        }}
+                    >
+                        <Form
+                            name="nest-messages"
+                            onFinish={onFinish}
+                            validateMessages={validateMessages}
+                            layout="vertical"
+                            form={forms}
+                        >
+                            <Row gutter={16}>
+                                <Col span={6}>
+                                    <Form.Item label="Job No">
+                                        <Input readOnly value={maxId} />
+                                    </Form.Item>
+                                </Col>
+
+                                <Col span={6}>
+                                    <Form.Item name="Dates" label="Date">
+                                        <DatePicker format={dateFormat} style={{ width: "100%" }} />
+                                    </Form.Item>
+                                </Col>
+
+                                <Col span={6}>
+                                    <Form.Item name="CuttOfDate" label="SI Cutt Of Date">
+                                        <DatePicker format={dateFormat} style={{ width: "100%" }} />
+                                    </Form.Item>
+                                </Col>
+
+                                <Col span={6}>
+                                    <Form.Item name="CuttOfDateVessel" label="Cutt Of Date Vessel">
+                                        <DatePicker format={dateFormat} style={{ width: "100%" }} />
+                                    </Form.Item>
+                                </Col>
+
+                                <Col span={12}>
+                                    <Form.Item name="JobType" label="Job Type" rules={[{ required: true }]}>
+                                        <Select
+                                            showSearch
+                                            mode="tags"
+                                            maxTagCount={1}
+                                            placeholder="Choose Option"
+                                            options={jobTypeOpt || []}
+                                        // value={selectJobType}
+                                        // onChange={setSelectJobTypeFunc}
+                                        />
+                                    </Form.Item>
+                                </Col>
+
+                                <Col span={6}>
+                                    <Form.Item name="EtdPol" label="ETD POL">
+                                        <DatePicker format={dateFormat} style={{ width: "100%" }} />
+                                    </Form.Item>
+                                </Col>
+
+                                <Col span={6}>
+                                    <Form.Item name="EtaPod" label="ETA-POD">
+                                        <DatePicker format={dateFormat} style={{ width: "100%" }} />
+                                    </Form.Item>
+                                </Col>
+
+                                <Col span={12}>
+                                    <Form.Item name="Customer" label="Customer" rules={[{ required: true }]}>
+                                        <Select
+                                            allowClear
+                                            mode="tags"
+                                            maxTagCount={1}
+                                            style={{ width: '100%' }}
+                                            tokenSeparators={[',']}
+                                            variant="underlined"
+                                            placeholder="Type to find a customer..."
+                                            options={customerOpt || []}
+                                            value={selectCustomer}
+                                            onChange={setSelectCustomerFunc}
+                                        />
+                                    </Form.Item>
+                                </Col>
+
+                                <Col span={12}>
+                                    <Form.Item name="CargoDetail" label="Cargo Details" rules={[{ required: true }]}>
+                                        <Select
+                                            allowClear
+                                            showSearch
+                                            mode="tags"
+                                            maxTagCount={1}
+                                            placeholder="Choose Option"
+                                            options={cargoOpt || []}
+                                        // value={selectCargo}
+                                        // onChange={setSelectCargoFunc}
+                                        />
+                                    </Form.Item>
+                                </Col>
+
+                                <Col span={12}>
+                                    <Form.Item name="GrossWeight" label="Gross Weight">
+                                        <Select
+                                            allowClear
+                                            showSearch
+                                            mode="tags"
+                                            maxTagCount={1}
+                                            placeholder="Choose Option"
+                                            options={grossWeightOpt || []}
+                                        // value={selectGrossWeight}
+                                        // onChange={setSelectGrossWeightFunc}
+                                        />
+                                    </Form.Item>
+                                </Col>
+
+                                <Col span={12}>
+                                    <Form.Item name="NetWeight" label="Net Weight">
+                                        <Select
+                                            mode="tags"
+                                            maxTagCount={1}
+                                            placeholder="Choose Option"
+                                            showSearch={{ optionFilterProp: 'label' }}
+                                            options={netWeightOpt || []}
+                                        // value={selectNetWeight}
+                                        // onChange={setSelectNetWeightFunc}
+                                        />
+                                    </Form.Item>
+                                </Col>
+
+                                <Col span={12}>
+                                    <Form.Item name="NoOfContainer" label="No Of Container">
+                                        <Select
+                                            mode="tags"
+                                            maxTagCount={1}
+                                            placeholder="Choose Option"
+                                            showSearch={{ optionFilterProp: 'label' }}
+                                            options={noOfContainerOpt || []}
+                                        // value={selectNoOfContainer}
+                                        // onChange={setSelectNoOfContainerFunc}
+                                        />
+                                    </Form.Item>
+                                </Col>
+
+                                <Col span={12}>
+                                    <Form.Item name="PortOfLoading" label="Port Of Loading-POL">
+                                        <Select
+                                            mode="tags"
+                                            maxTagCount={1}
+                                            placeholder="Choose Option"
+                                            showSearch={{ optionFilterProp: 'label' }}
+                                            options={portOfLoadingOpt || []}
+                                        // value={selectPortOfLoading}
+                                        // onChange={setSelectPortOfLoadingFunc}
+                                        />
+                                    </Form.Item>
+                                </Col>
+
+                                <Col span={12}>
+                                    <Form.Item name="PortOfDischarge" label="Port Of Discharge-POD">
+                                        <Select
+                                            mode="tags"
+                                            maxTagCount={1}
+                                            placeholder="Choose Option"
+                                            showSearch={{ optionFilterProp: 'label' }}
+                                            options={portOfDischargeOpt || []}
+                                        // value={selectPortOfDischarge}
+                                        // onChange={setSelectPortOfDischargeFunc}
+                                        />
+                                    </Form.Item>
+                                </Col>
+
+                                <Col span={12}>
+                                    <Form.Item name="LoadingTerm" label="Loading Term">
+                                        <Select
+                                            mode="tags"
+                                            maxTagCount={1}
+                                            placeholder="Choose Option"
+                                            showSearch={{ optionFilterProp: 'label' }}
+                                            options={loadingTermOpt || []}
+                                        // value={selectLoadingTerm}
+                                        // onChange={setSelectLoadingTermFunc}
+                                        />
+                                    </Form.Item>
+                                </Col>
+
+                                <Col span={12}>
+                                    <Form.Item name="ShippingLine" label="Shipping Line">
+                                        <Select
+                                            mode="tags"
+                                            maxTagCount={1}
+                                            placeholder="Choose Option"
+                                            showSearch={{ optionFilterProp: 'label' }}
+                                            options={shippingLineOpt || []}
+                                        // value={selectShippingLine}
+                                        // onChange={setSelectShippingLineFunc}
+                                        />
+                                    </Form.Item>
+                                </Col>
+
+                                <Col span={12}>
+                                    <Form.Item name="Vessel" label="Vessel">
+                                        <Select
+                                            mode="tags"
+                                            maxTagCount={1}
+                                            placeholder="Choose Option"
+                                            showSearch={{ optionFilterProp: 'label' }}
+                                            options={vesselOpt || []}
+                                        />
+                                    </Form.Item>
+                                </Col>
+
+                                <Col span={12}>
+                                    <Form.Item name="TransitTimeDays" label="Transit Time-Days">
+                                        <Input />
+                                    </Form.Item>
+                                </Col>
+
+                                <Col span={12}>
+                                    <Form.Item name="FreeDaysAtPod" label="Free Days At POD" rules={[{ type: 'number', min: 0, max: 99 }]}>
+                                        <InputNumber style={{ width: "100%" }} />
+                                    </Form.Item>
+                                </Col>
+
+                                <Col span={24}>
+                                    <Form.Item name="Comments" label="Comments">
+                                        <Input.TextArea />
+                                    </Form.Item>
+                                </Col>
+
+                            </Row>
+
+                            <Form.Item>
+                                <Space>
+                                    <Button type="primary" htmlType="submit">Insert</Button>
+                                    <Button color="primary" variant="dashed" disabled={!isPDFBtnEnabled} onClick={() => setIsModalOpen(true)}> Preview PDF
+                                        <FaEye />
+                                    </Button>
+                                </Space>
+                            </Form.Item>
+                        </Form>
+
+                    </div>
+                </Content>
+            </Layout>
+            <Modal
+                title="Job Invoice Preview"
+                open={isModalOpen}
+                onCancel={() => setIsModalOpen(false)}
+                width={900}
+                footer={[
+                    <Button onClick={() => setIsModalOpen(false)}>
+                        Close
+                    </Button>,
+                    <Button type="primary" onClick={handleDownloadPdf}>
+                        Download PDF
+                    </Button>,
+                ]}
             >
 
-                <Form
-                    name="nest-messages"
-                    onFinish={onFinish}
-                    validateMessages={validateMessages}
-                    layout="vertical"
-                    form={forms}
-                >
-                    <Row gutter={16}>
-                        <Col span={6}>
-                            <Form.Item label="Job No">
-                                <Input readOnly value={maxId} />
-                            </Form.Item>
-                        </Col>
+                <div ref={printRef} style={{ padding: 20, background: "#fff", fontSize: 12 }}>
 
-                        <Col span={6}>
-                            <Form.Item label="Date">
-                                <DatePicker defaultValue={dayjs(formatDate(new Date()), dateFormat)} format={dateFormat} style={{ width: "100%" }} />
-                            </Form.Item>
-                        </Col>
+                    {/* HEADER */}
+                    <div style={{ textAlign: "center", marginBottom: 10 }}>
+                        <Row justify={'space-between'}>
+                            <Col span={8}>
+                                <img src={logo} alt="" width="100%" height="120" />
+                            </Col>
+                            <Col span={16} style={{ paddingTop: "20px" }}>
+                                <h2 style={{ color: "#2d4b33" }}>PARALLEL LINE TRADING EST</h2>
+                                <h5 style={{ color: "#2d4b33" }}>
+                                    مؤسسة الخط المتوازي التجارية
+                                </h5>
+                            </Col>
+                        </Row>
+                    </div>
+                    <Divider />
 
-                        <Col span={6}>
-                            <Form.Item label="SI Cutt Of Date">
-                                <DatePicker defaultValue={dayjs(formatDate(form.cuttDate), dateFormat)} format={dateFormat} style={{ width: "100%" }} />
-                            </Form.Item>
+                    {/* Dates */}
+                    <Row gutter={24} justify="space-between">
+                        <Col span={15}>
+                            <p style={{ margin: 0 }}><b>Invoice Date:</b> {dayjs(insertJobArr?.createdDate)?.format(dateFormat)}</p>
+                            <p style={{ margin: 0 }}><b>SI Cutt Of Date:</b> {dayjs(insertJobArr?.cuttOfDate)?.format(dateFormat)}</p>
+                            <p style={{ margin: 0 }}><b>EtdPol Date:</b> {dayjs(insertJobArr?.etdPol)?.format(dateFormat)}</p>
                         </Col>
-
-                        <Col span={6}>
-                            <Form.Item label="Cutt Of Date Vessel">
-                                <DatePicker defaultValue={dayjs(formatDate(form.vesselDate), dateFormat)} format={dateFormat} style={{ width: "100%" }} />
-                            </Form.Item>
+                        <Col span={9}>
+                            <p style={{ margin: 0 }}><b>Invoice No:</b> {insertJobArr.jobId}</p>
+                            <p style={{ margin: 0 }}><b>Cutt Of Date Vessel:</b> {dayjs(insertJobArr?.cuttOfDateVessel)?.format(dateFormat)}</p>
+                            <p style={{ margin: 0 }}><b>EtdPod Date:</b> {dayjs(insertJobArr?.etaPod)?.format(dateFormat)}</p>
                         </Col>
-
-                        <Col span={12}>
-                            <Form.Item name={['user', 'Job Type']} label="Job Type" rules={[{ required: true }]}>
-                                <Select
-                                    showSearch
-                                    mode="tags"
-                                    maxTagCount={1}
-                                    placeholder="Choose Option"
-                                    options={jobTypeOpt || []}
-                                    value={selectJobType}
-                                    onChange={setSelectJobTypeFunc}
-                                />
-                            </Form.Item>
-                        </Col>
-
-                        <Col span={6}>
-                            <Form.Item label="ETD POL">
-                                <DatePicker defaultValue={dayjs(formatDate(form.polDate), dateFormat)} format={dateFormat} style={{ width: "100%" }} />
-                            </Form.Item>
-                        </Col>
-
-                        <Col span={6}>
-                            <Form.Item label="ETA-POD">
-                                <DatePicker defaultValue={dayjs(formatDate(form.podDate), dateFormat)} format={dateFormat} style={{ width: "100%" }} />
-                            </Form.Item>
-                        </Col>
-
-                        <Col span={12}>
-                            <Form.Item name={['user', 'Customer']} label="Customer" rules={[{ required: true }]}>
-                                <Select
-                                    allowClear
-                                    mode="tags"
-                                    maxTagCount={1}
-                                    style={{ width: '100%' }}
-                                    tokenSeparators={[',']}
-                                    variant="underlined"
-                                    placeholder="Type to find a customer..."
-                                    options={customerOpt || []}
-                                    value={selectCustomer}
-                                    onChange={setSelectCustomerFunc}
-                                />
-                            </Form.Item>
-                        </Col>
-
-                        <Col span={12}>
-                            <Form.Item name={['user', 'Cargo Details']} label="Cargo Details" rules={[{ required: true }]}>
-                                <Select
-                                    allowClear
-                                    showSearch
-                                    mode="tags"
-                                    maxTagCount={1}
-                                    placeholder="Choose Option"
-                                    options={cargoOpt || []}
-                                    value={selectCargo}
-                                    onChange={setSelectCargoFunc}
-                                />
-                            </Form.Item>
-                        </Col>
-
-                        <Col span={12}>
-                            <Form.Item name={['user', 'Gross Weight']} label="Gross Weight">
-                                <Select
-                                    allowClear
-                                    showSearch
-                                    mode="tags"
-                                    maxTagCount={1}
-                                    placeholder="Choose Option"
-                                    options={grossWeightOpt || []}
-                                    value={selectGrossWeight}
-                                    onChange={setSelectGrossWeightFunc}
-                                />
-                            </Form.Item>
-                        </Col>
-
-                        <Col span={12}>
-                            <Form.Item name={['user', 'Net Weight']} label="Net Weight">
-                                <Select
-                                    mode="tags"
-                                    maxTagCount={1}
-                                    placeholder="Choose Option"
-                                    showSearch={{ optionFilterProp: 'label' }}
-                                    options={netWeightOpt || []}
-                                    value={selectNetWeight}
-                                    onChange={setSelectNetWeightFunc}
-                                />
-                            </Form.Item>
-                        </Col>
-
-                        <Col span={12}>
-                            <Form.Item name={['user', 'No Of Container']} label="No Of Container">
-                                <Select
-                                    mode="tags"
-                                    maxTagCount={1}
-                                    placeholder="Choose Option"
-                                    showSearch={{ optionFilterProp: 'label' }}
-                                    options={noOfContainerOpt || []}
-                                    value={selectNoOfContainer}
-                                    onChange={setSelectNoOfContainerFunc}
-                                />
-                            </Form.Item>
-                        </Col>
-
-                        <Col span={12}>
-                            <Form.Item name={['user', 'Port Of Loading']} label="Port Of Loading-POL">
-                                <Select
-                                    mode="tags"
-                                    maxTagCount={1}
-                                    placeholder="Choose Option"
-                                    showSearch={{ optionFilterProp: 'label' }}
-                                    options={portOfLoadingOpt || []}
-                                    value={selectPortOfLoading}
-                                    onChange={setSelectPortOfLoadingFunc}
-                                />
-                            </Form.Item>
-                        </Col>
-
-                        <Col span={12}>
-                            <Form.Item name={['user', 'Port Of Discharge']} label="Port Of Discharge-POD">
-                                <Select
-                                    mode="tags"
-                                    maxTagCount={1}
-                                    placeholder="Choose Option"
-                                    showSearch={{ optionFilterProp: 'label' }}
-                                    options={portOfDischargeOpt || []}
-                                    value={selectPortOfDischarge}
-                                    onChange={setSelectPortOfDischargeFunc}
-                                />
-                            </Form.Item>
-                        </Col>
-
-                        <Col span={12}>
-                            <Form.Item name={['user', 'Loading Term']} label="Loading Term">
-                                <Select
-                                    mode="tags"
-                                    maxTagCount={1}
-                                    placeholder="Choose Option"
-                                    showSearch={{ optionFilterProp: 'label' }}
-                                    options={loadingTermOpt || []}
-                                    value={selectLoadingTerm}
-                                    onChange={setSelectLoadingTermFunc}
-                                />
-                            </Form.Item>
-                        </Col>
-
-                        <Col span={12}>
-                            <Form.Item name={['user', 'Shipping Line']} label="Shipping Line">
-                                <Select
-                                    mode="tags"
-                                    maxTagCount={1}
-                                    placeholder="Choose Option"
-                                    showSearch={{ optionFilterProp: 'label' }}
-                                    options={shippingLineOpt || []}
-                                    value={selectShippingLine}
-                                    onChange={setSelectShippingLineFunc}
-                                />
-                            </Form.Item>
-                        </Col>
-
-                        <Col span={12}>
-                            <Form.Item name={['user', 'Vessel']} label="Vessel">
-                                <Select
-                                    mode="tags"
-                                    maxTagCount={1}
-                                    placeholder="Choose Option"
-                                    showSearch={{ optionFilterProp: 'label' }}
-                                    options={vesselOpt || []}
-                                    value={selectVessel}
-                                    onChange={setSelectVesselFunc}
-                                />
-                            </Form.Item>
-                        </Col>
-
-                        <Col span={12}>
-                            <Form.Item name={['user', 'Transit Time-Days']} label="Transit Time-Days">
-                                <Input value={form.days} onChange={(e) => setForm({ ...form, days: e.target.value })} />
-                            </Form.Item>
-                        </Col>
-
-                        <Col span={12}>
-                            <Form.Item name={['user', 'Free Days At POD']} label="Free Days At POD" rules={[{ type: 'number', min: 0, max: 99 }]}>
-                                <InputNumber value={form.freeDays} onChange={(e) => setForm({ ...form, freeDays: e })} style={{ width: "100%" }} />
-                            </Form.Item>
-                        </Col>
-
-                        <Col span={24}>
-                            <Form.Item name={['user', 'Comments']} label="Comments">
-                                <Input.TextArea value={form.comment} onChange={(e) => setForm({ ...form, comment: e.target.value })} />
-                            </Form.Item>
-                        </Col>
-
                     </Row>
 
-                    <Form.Item>
-                        <Button type="primary" htmlType="submit">Submit</Button>
-                    </Form.Item>
-                </Form>
+                    {/* CUSTOMER */}
+                    <Row gutter={24} style={{ marginTop: "10px" }}>
+                        <Col span={15}>
+                            <b>Customer</b>
+                            <p>{insertJobArr?.customerName}</p>
+                        </Col>
 
-            </div>
-        </Content>
+                        <Col span={9}>
+                            <p style={{ margin: 0 }}>Job Type: {insertJobArr?.jobType}</p>
+                            <p style={{ margin: 0 }}>Gross Weight: {insertJobArr?.grossWeight}</p>
+                            <p style={{ margin: 0 }}>Net Weight: {insertJobArr?.netWeight}</p>
+                            <p style={{ margin: 0 }}>No Of Container: {insertJobArr?.numberOfContainer}</p>
+                            <p style={{ margin: 0 }}>Port Of Loading: {insertJobArr?.portOfLoading}</p>
+                            <p style={{ margin: 0 }}>Port Of Discharge: {insertJobArr?.portOfDischarge}</p>
+                            <p style={{ margin: 0 }}>Loading Term: {insertJobArr?.loadingTerm}</p>
+                            <p style={{ margin: 0 }}>Shipping Line: {insertJobArr?.shippingLine}</p>
+                            <p style={{ margin: 0 }}>Vessel: {insertJobArr?.vessel}</p>
+                            <p style={{ margin: 0 }}>Transit Time Days: {insertJobArr?.transitTimeDays}</p>
+                            <p style={{ margin: 0 }}>Free Days At Pod: {insertJobArr?.freeDaysAtPOD}</p>
+                        </Col>
+                    </Row>
+
+                    <Divider />
+
+                    {/* TABLE */}
+                    <Table
+                        columns={columns}
+                        dataSource={[{
+                            key: 1,
+                            description: insertJobArr?.cargoDetail,
+                            qty: 1,
+                        }]}
+                        pagination={false}
+                        bordered
+                    />
+
+                    <Divider />
+                    <center>
+                        <h6 style={{ margin: 0 }}>Office #214B Advanced Business Center Khalid Bin Waleed Road Jeddah</h6>
+                        <span>Jeddah 22234 Saudi Arabia</span><br />
+                        <p style={{ margin: 0, marginTop: "-5px" }}>www.trade-parallel.com</p>
+                    </center>
+
+                </div>
+
+            </Modal>
+        </>
     )
 }
 export default NewJob;

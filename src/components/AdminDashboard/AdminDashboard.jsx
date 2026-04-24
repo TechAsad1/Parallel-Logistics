@@ -1,5 +1,5 @@
 import React from "react";
-import { Layout, Card, Row, Col, Typography, Table, Space, DatePicker, Progress, Tag } from "antd";
+import { Layout, Card, Row, Col, Typography, Table, Space, DatePicker, Progress, Tag, Select } from "antd";
 import { ArrowRightOutlined } from "@ant-design/icons";
 import { LineChart } from "@mui/x-charts/LineChart";
 import { PieChart } from "@mui/x-charts";
@@ -7,7 +7,7 @@ import { lineClasses } from "@mui/x-charts/LineChart";
 import { BarChart } from "@mui/x-charts/BarChart";
 import { labelMarkClasses } from "@mui/x-charts/ChartsLabel";
 import { useDispatch, useSelector } from 'react-redux';
-import { GetJobProgressByUserIdAsync, GetJobSummaryMonthWiseByUserIdAsync, GetJobSummaryCountByUserIdAsync } from '../../redux/Action';
+import { getUser, GetJobProgressAsync, GetJobProgressByUserIdAsync, GetJobSummaryMonthWiseAsync, GetJobSummaryMonthWiseByUserIdAsync, GetJobSummaryCountAsync, GetJobSummaryCountByUserIdAsync } from '../../redux/Action';
 import { useEffect, useState } from 'react';
 import dayjs from "dayjs";
 import { Navigate } from "react-router-dom";
@@ -25,24 +25,46 @@ const { RangePicker } = DatePicker;
 const { Header, Content } = Layout;
 const { Title } = Typography;
 
-const Dashboard = () => {
-
+const AdminDashboard = () => {
 
   const dispatch = useDispatch();
   const jobProgressArrs = useSelector((state) => state.jobProgressArr);
   const jobSummaryMonthWiseArrs = useSelector((state) => state.jobSummaryMonthWiseArr);
   const jobSummaryCountArrs = useSelector((state) => state.jobSummaryCountArr);
+  const userArrs = useSelector((state) => state.userArr);
 
   const [fromDate, setFromDate] = useState(dayjs().subtract(1, "month").format("YYYY-MM-DD"));
   const [toDate, setToDate] = useState(dayjs().format("YYYY-MM-DD"));
-  const user = localStorage.getItem("user");
+  const [userId, setUserId] = useState(0);
+  const [userOpt, setUserOpt] = useState([]);
+  const [selectUser, setSelectUser] = useState([]);
 
   useEffect(() => {
-    dispatch(GetJobProgressByUserIdAsync(user, fromDate, toDate));
-    dispatch(GetJobSummaryMonthWiseByUserIdAsync(user, fromDate, toDate));
-    dispatch(GetJobSummaryCountByUserIdAsync(user, fromDate, toDate));
-  }, [fromDate, toDate]);
+    dispatch(getUser());
+  }, []);
 
+  useEffect(() => {
+    setUserOpt([]); // Reset
+    setUserOpt(() => [
+      ...userArrs.map((x) => ({
+        value: x.userId,
+        label: x.userName,
+      }))
+    ]);
+  }, [userArrs]);
+
+  useEffect(() => {
+    if (userId > 0) {
+      dispatch(GetJobProgressByUserIdAsync(userId, fromDate, toDate));
+      dispatch(GetJobSummaryMonthWiseByUserIdAsync(userId, fromDate, toDate));
+      dispatch(GetJobSummaryCountByUserIdAsync(userId, fromDate, toDate));
+    }
+    else {
+      dispatch(GetJobProgressAsync(fromDate, toDate));
+      dispatch(GetJobSummaryMonthWiseAsync(fromDate, toDate));
+      dispatch(GetJobSummaryCountAsync(fromDate, toDate));
+    }
+  }, [userId, fromDate, toDate]);
 
   // 📊 Line Data
   const uData = [4000, 3000, 2000, 2780, 1890, 2390, 3490];
@@ -51,31 +73,6 @@ const Dashboard = () => {
   const xLabels = [
     "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"
   ];
-
-
-  // const xLabels = [
-  //   "Filling", "Invoice", "DocumentCheck", "EDI", "CustomGD", "TestoAppointment", "CargoEntryConfirmation", "ScanningInspection", "CustomPayment", "FinalClearance", "LoadPermit"
-  // ];
-
-
-  // const [completedJobs, setCompletedJobs] = useState([]);
-  // const [jobIds, setJobIds] = useState([]);
-
-
-  // const dataset = jobStatusForDashboardArrs.map(job => ({
-  //   jobId: job.jobId,
-  //   Filling: job.filling ? 1 : 0,
-  //   Invoice: job.invoice ? 1 : 0,
-  //   DocumentCheck: job.documentCheck ? 1 : 0,
-  //   EDI: job.edi ? 1 : 0,
-  //   CustomGD: job.customGD ? 1 : 0,
-  //   TestoAppointment: job.testoAppointment ? 1 : 0,
-  //   CargoEntryConfirmation: job.cargoEntryConfirmation ? 1 : 0,
-  //   ScanningInspection: job.scanningInspection ? 1 : 0,
-  //   CustomPayment: job.customPayment ? 1 : 0,
-  //   FinalClearance: job.finalClearance ? 1 : 0,
-  //   LoadPermit: job.loadPermit ? 1 : 0,
-  // }));
 
   // 🥧 Pie Data
   const pieData = [
@@ -108,7 +105,6 @@ const Dashboard = () => {
     );
   }
 
-
   const formatSteps = (steps) => {
     return steps.map((step, index) => {
       if (index === 0) return { ...step, diff: 0 };
@@ -134,7 +130,6 @@ const Dashboard = () => {
       ],
     },
   ];
-
 
   const columns = [
     {
@@ -175,7 +170,6 @@ const Dashboard = () => {
       },
     },
   ];
-
 
   const renderTimeline = (steps) => {
     const data = formatSteps(steps);
@@ -288,6 +282,17 @@ const Dashboard = () => {
   const completedJobs = jobSummaryMonthWiseArrs.map(d => d.completedJobs);
   const activeJobs = jobSummaryMonthWiseArrs.map(d => d.activeJobs);
 
+  const setSelectUserFunc = (val) => {
+    if (!val) {
+      setSelectUser(null);
+      return;
+    }
+    const usr = userOpt.find(x => x.value == val);
+    setSelectUser(usr);
+    setUserId(usr.value);
+  }
+
+  const user = localStorage.getItem("user");
   if (!user) return <Navigate to="/login" />;
 
   return (
@@ -307,21 +312,41 @@ const Dashboard = () => {
               </Title>
             </Col>
 
-            {/* DATE RANGE */}
-            <Col xs={24} sm={12} md={16} lg={5}>
-              <RangePicker
-                style={{ width: "100%" }}   // 👈 full width on mobile
-                defaultValue={[dayjs().subtract(1, "month"), dayjs()]}
-                onChange={(dates) => {
-                  if (!dates) return;
+            <Col xs={24} sm={12} md={16} lg={8}>
+              <Row justify="space-between" align="bottom" gutter={16}>
+                <Col xs={24} sm={12} md={16} lg={12}>
+                  <Select
+                    allowClear
+                    showSearch
+                    style={{ width: '100%' }}
+                    variant="underlined"
+                    placeholder="Type to find a user..."
+                    options={userOpt || []}
+                    value={selectUser}
+                    onChange={setSelectUserFunc}
+                    optionFilterProp="label"
+                    filterOption={(input, option) =>
+                      option?.label?.toLowerCase().includes(input.toLowerCase())
+                    }
+                  />
+                </Col>
+                {/* DATE RANGE */}
+                <Col xs={24} sm={12} md={16} lg={12}>
+                  <RangePicker
+                    style={{ width: "100%" }}   // 👈 full width on mobile
+                    defaultValue={[dayjs().subtract(1, "month"), dayjs()]}
+                    onChange={(dates) => {
+                      if (!dates) return;
 
-                  const fromDate = dates[0].format("YYYY-MM-DD");
-                  const toDate = dates[1].format("YYYY-MM-DD");
+                      const fromDate = dates[0].format("YYYY-MM-DD");
+                      const toDate = dates[1].format("YYYY-MM-DD");
 
-                  setFromDate(fromDate);
-                  setToDate(toDate);
-                }}
-              />
+                      setFromDate(fromDate);
+                      setToDate(toDate);
+                    }}
+                  />
+                </Col>
+              </Row>
             </Col>
 
           </Row>
@@ -375,7 +400,7 @@ const Dashboard = () => {
                 <Col span={24}>
                   <Card>
                     <Title level={5}>Total Jobs</Title>
-                    <h2>{jobSummaryCountArrs?.totalJobs}</h2>
+                    <h2>{jobSummaryCountArrs?.totalJobs ? jobSummaryCountArrs?.totalJobs : 0}</h2>
                   </Card>
                 </Col>
 
@@ -537,4 +562,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+export default AdminDashboard;

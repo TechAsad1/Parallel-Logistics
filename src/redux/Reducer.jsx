@@ -2,16 +2,26 @@ import initialState from "./Initial.value";
 
 const Reducer = (state = initialState, action) => {
     switch (action.type) {
+        //Dashboard
+        case "getJobProgressAsync":
+            return { ...state, jobProgressArr: action.payload };
+        case "getJobSummaryCountAsync":
+            return { ...state, jobSummaryCountArr: action.payload };
+        case "getJobSummaryMonthWiseAsync":
+            return { ...state, jobSummaryMonthWiseArr: action.payload };
+
         //CargoDetail
         case "getCargo":
             return { ...state, cargoDetailArr: action.payload };
+        case "cargoById":
+            return { ...state, singleCargoDetailArr: action.payload };
         case "insertCargo":
             return { ...state, cargoDetailArr: [...state.cargoDetailArr, action.payload] };
         case "updateCargo":
             return {
                 ...state,
                 cargoDetailArr: state.cargoDetailArr.map((post) =>
-                    post.id === action.payload.id ? action.payload : post
+                    post.cargoDetailDesc === action.payload.cargoDetailDesc ? action.payload : post
                 ),
             };
         case "deleteCargo":
@@ -20,17 +30,19 @@ const Reducer = (state = initialState, action) => {
         //Customer
         case "getCustomer":
             return { ...state, customerArr: action.payload };
+        case "customerById":
+            return { ...state, singleCustomerArr: action.payload };
         case "insertCustomer":
             return { ...state, customerArr: [...state.customerArr, action.payload] };
         case "updateCustomer":
             return {
                 ...state,
                 customerArr: state.customerArr.map((post) =>
-                    post.id === action.payload.id ? action.payload : post
+                    post.customerId === action.payload.customerId ? action.payload : post
                 ),
             };
         case "deleteCustomer":
-            return { ...state, customerArr: state.customerArr.filter((x) => x.id !== action.payload) };
+            return { ...state, customerArr: state.customerArr.filter((x) => x.customerId !== action.payload) };
 
         //GrossWeight
         case "getGrossWeight":
@@ -50,21 +62,37 @@ const Reducer = (state = initialState, action) => {
         //Job
         case "getJob":
             return { ...state, jobArr: action.payload };
-        case "jobById":
+        case "jobsByUserIdResponse":
             return { ...state, jobArr: action.payload };
+        case "jobById":
+            return { ...state, singleJobArr: action.payload };
         case "insertJob":
             return { ...state, jobArr: [...state.jobArr, action.payload] };
         case "updateJob":
             return {
                 ...state,
                 jobArr: state.jobArr.map((post) =>
-                    post.id === action.payload.id ? action.payload : post
+                    post.jobId === action.payload.jobId ? action.payload : post
                 ),
             };
         case "deleteJob":
-            return { ...state, jobArr: state.jobArr.filter((x) => x.id !== action.payload) };
+            return { ...state, jobArr: state.jobArr.filter((x) => x.jobId !== action.payload) };
         case "maxIdJob":
             return { ...state, maxId: action.payload };
+        case "updateJobCheckStatus":
+            return {
+                ...state,
+                jobArr: state.jobArr.map((post) =>
+                    post.jobId === action.payload.jobId ? action.payload : post
+                ),
+            };
+
+        case "getJobProgressAsync":
+            return { ...state, jobProgressArr: action.payload };
+        case "getJobSummaryMonthWiseAsync":
+            return { ...state, jobSummaryMonthWiseArr: action.payload };
+        case "getJobSummaryCountAsync":
+            return { ...state, jobSummaryCountArr: action.payload };
 
         //JobType
         case "getJobType":
@@ -125,7 +153,7 @@ const Reducer = (state = initialState, action) => {
             };
         case "deleteNetWeight":
             return { ...state, netWeightArr: state.netWeightArr.filter((x) => x.id !== action.payload) };
-            
+
         //NoOfContainer
         case "getNoOfContainer":
             return { ...state, noOfContainerArr: action.payload };
@@ -189,17 +217,23 @@ const Reducer = (state = initialState, action) => {
         //User
         case "getUser":
             return { ...state, userArr: action.payload };
+        case "getUserById":
+            return { ...state, singleUserArr: action.payload };
         case "insertUser":
             return { ...state, userArr: [...state.userArr, action.payload] };
         case "updateUser":
             return {
                 ...state,
                 userArr: state.userArr.map((post) =>
-                    post.id === action.payload.id ? action.payload : post
+                    post.userId === action.payload.userId ? action.payload : post
                 ),
             };
         case "deleteUser":
-            return { ...state, userArr: state.userArr.filter((x) => x.id !== action.payload) };
+            return { ...state, userArr: state.userArr.filter((x) => x.userId !== action.payload) };
+
+        //Login
+        case "loginResponse":
+            return { ...state, loginArr: action.payload };
 
         //Vessel
         case "getVessel":
@@ -215,6 +249,19 @@ const Reducer = (state = initialState, action) => {
             };
         case "deleteVessel":
             return { ...state, vesselArr: state.vesselArr.filter((x) => x.id !== action.payload) };
+
+
+        //JobAssign
+        case "existsJobAssign":
+            return { ...state, isExistsJobAssign: action.payload };
+        case "updateJobAssign":
+            return {
+                ...state,
+                jobArr: state.jobArr.map((post) =>
+                    post.jobId === action.payload.jobId ? action.payload : post
+                ),
+            };
+
 
         //InvID
         case "invIDVar":

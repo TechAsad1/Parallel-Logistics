@@ -9,29 +9,29 @@ import {
     EditFilled
 } from '@ant-design/icons';
 import { useDispatch, useSelector } from 'react-redux';
-import { getUser, deleteUser } from '../../redux/Action';
+import { getCustomer, deleteCustomer } from '../../redux/Action';
 import { useEffect, useState } from 'react';
-import EditUser from "./EditUser";
-import AddUser from "./AddUser";
+import EditCustomer from "./EditCustomer";
 import { Navigate } from "react-router-dom";
+import AddCustomer from "./AddCustomer";
 import SideBar from '../SideBar.jsx'
 
 const { Content } = Layout;
 
 const { Text } = Typography;
 
-function Users() {
+function Customers() {
 
     const dispatch = useDispatch();
-    const userArrs = useSelector((state) => state.userArr);
+    const customerArrs = useSelector((state) => state.customerArr);
 
     const [modalEditOpen, setModalEditOpen] = useState(false);
     const [modalNewOpen, setModalNewOpen] = useState(false);
 
-    const [selectedUser, setSelectedUser] = useState([]);
+    const [selectedCustomer, setSelectedCustomer] = useState([]);
 
     function setOpenModalEditFunc(job) {
-        setSelectedUser(job);
+        setSelectedCustomer(job);
         setModalEditOpen(true);
     }
 
@@ -40,7 +40,7 @@ function Users() {
     };
 
     useEffect(() => {
-        dispatch(getUser());
+        dispatch(getCustomer());
     }, []);
 
     const {
@@ -66,7 +66,7 @@ function Users() {
                         confirmButton: "btn btn-success",
                     },
                 });
-                dispatch(deleteUser(id));
+                dispatch(deleteCustomer(id));
             } else {
                 Swal.close();
             }
@@ -74,19 +74,24 @@ function Users() {
     };
     const columns = [
         {
-            title: "UserName",
-            dataIndex: "userName",
-            sorter: (a, b) => a.userName.length - b.userName.length,
+            title: "CustomerName",
+            dataIndex: "customerName",
+            sorter: (a, b) => a.customerName.length - b.customerName.length,
         },
         {
-            title: "Designation",
-            dataIndex: "designation",
-            sorter: (a, b) => a.designation.length - b.designation.length,
+            title: "Contact",
+            dataIndex: "contact",
+            sorter: (a, b) => a.contact.length - b.contact.length,
         },
         {
-            title: "Password",
-            dataIndex: "password",
-            sorter: (a, b) => a.password.length - b.password.length,
+            title: "Email",
+            dataIndex: "email",
+            sorter: (a, b) => a.email.length - b.email.length,
+        },
+        {
+            title: "Address",
+            dataIndex: "address",
+            sorter: (a, b) => a.address.length - b.address.length,
         },
         {
             title: "Actions",
@@ -100,7 +105,7 @@ function Users() {
                             <EditFilled style={{ color: "#444" }} />
                         </Link>
                         <Link className="confirm-text p-2" to="#">
-                            <DeleteFilled onClick={(e) => showConfirmationAlert(record.userId)} style={{ color: "#444" }} />
+                            <DeleteFilled onClick={(e) => showConfirmationAlert(record.customerId)} style={{ color: "#444" }} />
                         </Link>
                     </div>
                 </div>
@@ -112,9 +117,9 @@ function Users() {
         { value: "newest", label: "Newest" },
         { value: "oldest", label: "Oldest" },
     ];
-
     const user = localStorage.getItem("user");
     if (!user) return <Navigate to="/login" />;
+
     return (
         <>
             <Layout style={{minHeight:'100vh'}}>
@@ -123,10 +128,10 @@ function Users() {
 
                     <div className="header d-flex justify-content-between align-items-center">
                         <div>
-                            <h5>Users</h5>
-                            <Text type="secondary">Manage your users</Text>
+                            <h5>Customers</h5>
+                            <Text type="secondary">Manage your customers</Text>
                         </div>
-                        <Button type="primary" onClick={() => setModalNewOpen(true)}>Add New User</Button>
+                        <Button type="primary" onClick={() => setModalNewOpen(true)}>Add New Customer</Button>
                     </div>
                     <div
                         style={{
@@ -150,22 +155,22 @@ function Users() {
                             </div>
                         </div>
                         <div className="table-responsive">
-                            <Table columns={columns} dataSource={userArrs} />
+                            <Table columns={columns} dataSource={customerArrs} />
                         </div>
                     </div>
                 </Content>
-                <EditUser
-                    open={modalEditOpen}
-                    onClose={handleClose}
-                    selectedUser={selectedUser}
-                />
-                <AddUser
-                    open={modalNewOpen}
-                    onClose={() => setModalNewOpen(false)}
-                />
             </Layout>
+            <EditCustomer
+                open={modalEditOpen}
+                onClose={handleClose}
+                selectedCustomer={selectedCustomer}
+            />
+            <AddCustomer
+                open={modalNewOpen}
+                onClose={() => setModalNewOpen(false)}
+            />
         </>
     )
 
 }
-export default Users;
+export default Customers;
