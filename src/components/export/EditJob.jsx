@@ -7,13 +7,11 @@ import dayjs from 'dayjs';
 import { useEffect, useState } from 'react';
 import { formatDate } from '../Helper';
 import { useDispatch, useSelector } from 'react-redux';
-import { getCargo, getCustomer, getGrossWeight, getJobType, getLoadingTerm, getNetWeight, getNoOfContainer, getPortOfDischarge, getPortOfLoading, getShippingLine, getVessel, insertJob, jobById, maxIdJob, updateJob } from '../../redux/Action';
+import { getCargo, getCustomer, getGrossWeight, getJobType, getLoadingTerm, getNetWeight, getNoOfContainer, getPortOfDischarge, getPortOfLoading, getShippingLine, getVessel, jobById, updateJob } from '../../redux/Action';
 import { Navigate } from "react-router-dom";
 import SideBar from '../SideBar.jsx'
 
 const { Content } = Layout;
-
-const { Text } = Typography;
 
 function EditJob() {
     const dispatch = useDispatch();
@@ -72,7 +70,7 @@ function EditJob() {
 
     useEffect(() => {
         loadStates();
-    }, []);
+    }, [dispatch]);
 
     //CargoDetail
     useEffect(() => {
@@ -189,7 +187,7 @@ function EditJob() {
         setJobId(id);
         if (id)
             dispatch(jobById(id));
-    }, [id]);
+    }, [dispatch,id]);
 
     //Options
     const [cargoOpt, setCargoOpt] = useState([]);

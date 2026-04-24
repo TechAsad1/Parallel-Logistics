@@ -27,31 +27,26 @@ const SideBar = () => {
         if (!user) {
             navigate("/login");
         }
-    }, [navigate,location.pathname]);
+    }, [navigate, location.pathname]);
 
     //Navbar
-    const items = [
-        ...(isAdmin == 'true' ? [getItem(<Link to="/AdminDashboard" style={{ textDecoration: "none" }}>Admin Dashboard</Link>, "1", <RiDashboard3Fill />)] : []),
-        ...(isAdmin == 'false' ? [getItem(<Link to="/Dashboard" style={{ textDecoration: "none" }}>Dashboard</Link>, "1", <RiDashboard3Fill />)] : []),
+    const adminNav = [
+        getItem(<Link to="/AdminDashboard" style={{ textDecoration: "none" }}>Admin Dashboard</Link>, "1", <RiDashboard3Fill />),
         getItem("Job", '2', <DockerOutlined />, [
             getItem(<Link to="/Job" style={{ textDecoration: "none" }}>Job</Link>, "3"),
             getItem(<Link to="/AddJob" style={{ textDecoration: "none" }}>Add New Job</Link>, "4")
         ]),
-        ...(isAdmin == 'true' ? [getItem(<Link to="/Customer" style={{ textDecoration: "none" }}>Customer</Link>, "6", <HiMiniUserGroup />)] : []),
-        ...(isAdmin == 'true' ? [getItem(<Link to="/User" style={{ textDecoration: "none" }}>User</Link>, "5", <UsergroupAddOutlined />)] : []),
+        getItem(<Link to="/Customer" style={{ textDecoration: "none" }}>Customer</Link>, "6", <HiMiniUserGroup />),
+        getItem(<Link to="/User" style={{ textDecoration: "none" }}>User</Link>, "5", <UsergroupAddOutlined />),
         getItem(<Link to="/Login" style={{ textDecoration: "none" }}>Logout</Link>, "7", <MdOutlineLogout />),
-        // getItem("Management", '7', <HiMiniRectangleGroup />, [
-        //   getItem(<Link to="/CargoItem" style={{ textDecoration: "none" }}>Cargo Item</Link>, "8"),
-        //   getItem(<Link to="/JobType" style={{ textDecoration: "none" }}>Job Type</Link>, "9"),
-        //   getItem(<Link to="/GrossWeight" style={{ textDecoration: "none" }}>Gross Weight</Link>, "10"),
-        //   getItem(<Link to="/NetWeight" style={{ textDecoration: "none" }}>Net Weight</Link>, "11"),
-        //   getItem(<Link to="/NoOfContainer" style={{ textDecoration: "none" }}>No Of Container</Link>, "12"),
-        //   getItem(<Link to="/PortOfLoading" style={{ textDecoration: "none" }}>Port Of Loading</Link>, "13"),
-        //   getItem(<Link to="/PortOfDischarge" style={{ textDecoration: "none" }}>Port Of Discharge</Link>, "14"),
-        //   getItem(<Link to="/LoadingTerm" style={{ textDecoration: "none" }}>Loading Term</Link>, "15"),
-        //   getItem(<Link to="/ShippingLine" style={{ textDecoration: "none" }}>Shipping Line</Link>, "16"),
-        //   getItem(<Link to="/Vessel" style={{ textDecoration: "none" }}>Vessel</Link>, "17"),
-        // ]),
+    ];
+    const nav = [
+        getItem(<Link to="/Dashboard" style={{ textDecoration: "none" }}>Dashboard</Link>, "1", <RiDashboard3Fill />),
+        getItem("Job", '2', <DockerOutlined />, [
+            getItem(<Link to="/Job" style={{ textDecoration: "none" }}>Job</Link>, "3"),
+            getItem(<Link to="/AddJob" style={{ textDecoration: "none" }}>Add New Job</Link>, "4")
+        ]),
+        getItem(<Link to="/Login" style={{ textDecoration: "none" }}>Logout</Link>, "7", <MdOutlineLogout />),
     ];
     function getItem(label, key, icon, children) {
         return {
@@ -91,7 +86,7 @@ const SideBar = () => {
                 className="custom-collapse-btn"
                 icon={collapsed ? <DoubleRightOutlined /> : <DoubleLeftOutlined />}
             />
-            <Menu defaultSelectedKeys={['3']} mode="inline" selectedKeys={[selectedKeyMap[location.pathname]]} items={items}
+            <Menu defaultSelectedKeys={['3']} mode="inline" selectedKeys={[selectedKeyMap[location.pathname]]} items={isAdmin == "true" ? adminNav : nav}
                 onClick={({ key }) => {
                     if (key === "7") {
                         handleLogout();
