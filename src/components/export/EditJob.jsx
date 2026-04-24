@@ -337,13 +337,13 @@ function EditJob() {
     };
 
     const validateMessages = {
-        required: '${label} is required!',
+        required: "${label} is required!",
         types: {
-            email: '${label} is not a valid email!',
-            number: '${label} is not a valid number!',
+            email: "${label} is not a valid email!",
+            number: "${label} is not a valid number!",
         },
         number: {
-            range: '${label} must be between ${min} and ${max}',
+            range: "${label} must be between ${min} and ${max}",
         },
     };
 
@@ -453,6 +453,7 @@ function EditJob() {
                                             variant="underlined"
                                             placeholder="Type to find a customer..."
                                             options={customerOpt || []}
+                                            value={selectCustomer}
                                             onChange={setSelectCustomerFunc}
                                         />
                                     </Form.Item>
@@ -489,7 +490,6 @@ function EditJob() {
                                     <Form.Item name="NetWeight" label="Net Weight">
                                         <Select
                                             allowClear
-                                            showSearch
                                             mode="tags"
                                             maxTagCount={1}
                                             placeholder="Choose Option"
@@ -503,7 +503,6 @@ function EditJob() {
                                     <Form.Item name="NoOfContainer" label="No Of Container">
                                         <Select
                                             allowClear
-                                            showSearch
                                             mode="tags"
                                             maxTagCount={1}
                                             placeholder="Choose Option"
@@ -517,7 +516,6 @@ function EditJob() {
                                     <Form.Item name="PortOfLoading" label="Port Of Loading-POL">
                                         <Select
                                             allowClear
-                                            showSearch
                                             mode="tags"
                                             maxTagCount={1}
                                             placeholder="Choose Option"
@@ -531,7 +529,6 @@ function EditJob() {
                                     <Form.Item name="PortOfDischarge" label="Port Of Discharge-POD">
                                         <Select
                                             allowClear
-                                            showSearch
                                             mode="tags"
                                             maxTagCount={1}
                                             placeholder="Choose Option"
@@ -545,7 +542,6 @@ function EditJob() {
                                     <Form.Item name="LoadingTerm" label="Loading Term">
                                         <Select
                                             allowClear
-                                            showSearch
                                             mode="tags"
                                             maxTagCount={1}
                                             placeholder="Choose Option"
@@ -559,7 +555,6 @@ function EditJob() {
                                     <Form.Item name="ShippingLine" label="Shipping Line">
                                         <Select
                                             allowClear
-                                            showSearch
                                             mode="tags"
                                             maxTagCount={1}
                                             placeholder="Choose Option"
@@ -573,7 +568,6 @@ function EditJob() {
                                     <Form.Item name="Vessel" label="Vessel">
                                         <Select
                                             allowClear
-                                            showSearch
                                             mode="tags"
                                             maxTagCount={1}
                                             placeholder="Choose Option"

@@ -40,7 +40,7 @@ function AddCustomer({ open, onClose }) {
     };
 
     const validateMessages = {
-        required: '${label} is required!',
+        required: "${label} is required!",
     };
 
     return (
