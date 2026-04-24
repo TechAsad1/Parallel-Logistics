@@ -1,10 +1,10 @@
-import { Input, Button, Modal, Form, Row, Col, Select, Checkbox } from "antd";
+import { Input, Modal, Form, Row, Col, Checkbox } from "antd";
 import {
     EyeOutlined,
     EyeInvisibleOutlined,
 } from "@ant-design/icons";
-import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from 'react-redux';
+import { useState } from "react";
+import { useDispatch } from 'react-redux';
 import { insertUser } from '../../redux/Action';
 import Swal from 'sweetalert2';
 

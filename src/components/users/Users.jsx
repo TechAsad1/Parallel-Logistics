@@ -1,10 +1,9 @@
 
 import Swal from 'sweetalert2';
-import { Breadcrumb, Button, Table, Layout, theme, Select, Typography } from 'antd';
+import { Button, Table, Layout, theme, Select, Typography } from 'antd';
 import { Link } from 'react-router-dom';
 import Search from 'antd/es/transfer/search';
 import {
-    DoubleRightOutlined,
     DeleteFilled,
     EditFilled
 } from '@ant-design/icons';

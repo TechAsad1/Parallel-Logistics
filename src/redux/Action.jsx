@@ -219,7 +219,6 @@ export const getJob = () => async (dispatch) => {
 };
 export const getJobByUserId = (id) => async (dispatch) => {
   try {
-    console.log(id);
     const rec = await axios.get(jobUrl + "/JobsByUserIdAsync/" + `${id}`);
     dispatch({ type: "jobsByUserIdResponse", payload: rec.data });
   }

@@ -87,13 +87,6 @@ const Reducer = (state = initialState, action) => {
                 ),
             };
 
-        case "getJobProgressAsync":
-            return { ...state, jobProgressArr: action.payload };
-        case "getJobSummaryMonthWiseAsync":
-            return { ...state, jobSummaryMonthWiseArr: action.payload };
-        case "getJobSummaryCountAsync":
-            return { ...state, jobSummaryCountArr: action.payload };
-
         //JobType
         case "getJobType":
             return { ...state, jobTypeArr: action.payload };
