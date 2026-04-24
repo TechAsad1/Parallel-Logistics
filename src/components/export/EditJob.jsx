@@ -205,20 +205,9 @@ function EditJob() {
     const [vesselOpt, setVesselOpt] = useState([]);
 
     //Select State
-    const [selectCargo, setSelectCargo] = useState([]);
     const [selectCustomer, setSelectCustomer] = useState([]);
-    const [selectGrossWeight, setSelectGrossWeight] = useState([]);
-    const [selectJobType, setSelectJobType] = useState([]);
-    const [selectLoadingTerm, setSelectLoadingTerm] = useState([]);
-    const [selectNetWeight, setSelectNetWeight] = useState([]);
-    const [selectNoOfContainer, setSelectNoOfContainer] = useState([]);
-    const [selectPortOfDischarge, setSelectPortOfDischarge] = useState([]);
-    const [selectPortOfLoading, setSelectPortOfLoading] = useState([]);
-    const [selectShippingLine, setSelectShippingLine] = useState([]);
-    const [selectVessel, setSelectVessel] = useState([]);
 
     const [form, setForm] = useState(initialForm);
-    const resetForm = () => setForm(initialForm);
 
     const [jobId, setJobId] = useState("");
 
@@ -252,8 +241,6 @@ function EditJob() {
     //Fetch Data
     useEffect(() => {
         if (singleJobArrs) {
-            let job = [];
-            let cargo = [];
             let customer = [];
             if (singleJobArrs.customerId)
                 customer = customerArrs.find((i) => i.customerId === singleJobArrs.customerId);
@@ -331,36 +318,6 @@ function EditJob() {
     const {
         token: { colorBgContainer, borderRadiusLG },
     } = theme.useToken();
-    const showConfirmationAlert = () => {
-        Swal.fire({
-            title: "Are you sure?",
-            text: "You won't be able to revert this!",
-            showCancelButton: true,
-            confirmButtonColor: "#00ff00",
-            confirmButtonText: "Yes, delete it!",
-            cancelButtonColor: "#ff0000",
-            cancelButtonText: "Cancel",
-        }).then((result) => {
-            if (result.isConfirmed) {
-                Swal.fire({
-                    title: "Deleted!",
-                    text: "Your file has been deleted.",
-                    className: "btn btn-success",
-                    confirmButtonText: "OK",
-                    customClass: {
-                        confirmButton: "btn btn-success",
-                    },
-                });
-                // dispatch(deleteArea(id));
-            } else {
-                Swal.close();
-            }
-        });
-    };
-    const layout = {
-        labelCol: { span: 16 },
-        wrapperCol: { span: 8 },
-    };
 
     const recordUpdatedMessage = () => {
         Swal.fire({
@@ -386,10 +343,6 @@ function EditJob() {
     const onFinish = (values: any) => {
         updateFunc(values);
     }
-
-    const handleChange = value => {
-        console.log(`selected ${value}`);
-    };
 
     const options = [];
     for (let i = 10; i < 36; i++) {

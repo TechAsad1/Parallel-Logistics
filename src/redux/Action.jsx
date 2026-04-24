@@ -1,12 +1,9 @@
-import axios from "axios";
-import config from "../redux/Config";
+import api from "./Api.jsx";
 
-const mainUrl = config.url;
 //Dashboard
-const dashboardUrl = mainUrl + "Dashboard";
 export const GetJobProgressAsync = (fromDate, toDate) => async (dispatch) => {
   try {
-    const rec = await axios.get(`${dashboardUrl}/GetJobProgressAsync?fromDate=${fromDate}&toDate=${toDate}`);
+    const rec = await api.get(`Dashboard/GetJobProgressAsync?fromDate=${fromDate}&toDate=${toDate}`);
     dispatch({ type: "getJobProgressAsync", payload: rec.data });
   }
   catch (err) {
@@ -15,7 +12,7 @@ export const GetJobProgressAsync = (fromDate, toDate) => async (dispatch) => {
 };
 export const GetJobSummaryCountAsync = (fromDate, toDate) => async (dispatch) => {
   try {
-    const rec = await axios.get(`${dashboardUrl}/GetJobSummaryCountAsync?fromDate=${fromDate}&toDate=${toDate}`);
+    const rec = await api.get(`Dashboard/GetJobSummaryCountAsync?fromDate=${fromDate}&toDate=${toDate}`);
     dispatch({ type: "getJobSummaryCountAsync", payload: rec.data });
   }
   catch (err) {
@@ -24,7 +21,7 @@ export const GetJobSummaryCountAsync = (fromDate, toDate) => async (dispatch) =>
 };
 export const GetJobSummaryMonthWiseAsync = (fromDate, toDate) => async (dispatch) => {
   try {
-    const rec = await axios.get(`${dashboardUrl}/GetJobSummaryMonthWiseAsync?fromDate=${fromDate}&toDate=${toDate}`);
+    const rec = await api.get(`Dashboard/GetJobSummaryMonthWiseAsync?fromDate=${fromDate}&toDate=${toDate}`);
     dispatch({ type: "getJobSummaryMonthWiseAsync", payload: rec.data });
   }
   catch (err) {
@@ -34,7 +31,7 @@ export const GetJobSummaryMonthWiseAsync = (fromDate, toDate) => async (dispatch
 
 export const GetJobProgressByUserIdAsync = (id, fromDate, toDate) => async (dispatch) => {
   try {
-    const rec = await axios.get(`${dashboardUrl}/GetJobProgressByUserIdAsync/${id}?fromDate=${fromDate}&toDate=${toDate}`);
+    const rec = await api.get(`Dashboard/GetJobProgressByUserIdAsync/${id}?fromDate=${fromDate}&toDate=${toDate}`);
     dispatch({ type: "getJobProgressAsync", payload: rec.data });
   }
   catch (err) {
@@ -43,7 +40,7 @@ export const GetJobProgressByUserIdAsync = (id, fromDate, toDate) => async (disp
 };
 export const GetJobSummaryCountByUserIdAsync = (id, fromDate, toDate) => async (dispatch) => {
   try {
-    const rec = await axios.get(`${dashboardUrl}/GetJobSummaryCountByUserIdAsync/${id}?fromDate=${fromDate}&toDate=${toDate}`);
+    const rec = await api.get(`Dashboard/GetJobSummaryCountByUserIdAsync/${id}?fromDate=${fromDate}&toDate=${toDate}`);
     dispatch({ type: "getJobSummaryCountAsync", payload: rec.data });
   }
   catch (err) {
@@ -52,7 +49,7 @@ export const GetJobSummaryCountByUserIdAsync = (id, fromDate, toDate) => async (
 };
 export const GetJobSummaryMonthWiseByUserIdAsync = (id, fromDate, toDate) => async (dispatch) => {
   try {
-    const rec = await axios.get(`${dashboardUrl}/GetJobSummaryMonthWiseByUserIdAsync/${id}?fromDate=${fromDate}&toDate=${toDate}`);
+    const rec = await api.get(`Dashboard/GetJobSummaryMonthWiseByUserIdAsync/${id}?fromDate=${fromDate}&toDate=${toDate}`);
     dispatch({ type: "getJobSummaryMonthWiseAsync", payload: rec.data });
   }
   catch (err) {
@@ -61,10 +58,9 @@ export const GetJobSummaryMonthWiseByUserIdAsync = (id, fromDate, toDate) => asy
 };
 
 //CargoDetail
-const CargoDetailUrl = mainUrl + "CargoDetail";
 export const getCargo = () => async (dispatch) => {
   try {
-    const rec = await axios.get(CargoDetailUrl + "/DTO");
+    const rec = await api.get("CargoDetail/DTO");
     dispatch({ type: "getCargo", payload: rec.data });
   }
   catch (err) {
@@ -73,7 +69,7 @@ export const getCargo = () => async (dispatch) => {
 };
 export const getCargoById = (id) => async (dispatch) => {
   try {
-    const rec = await axios.get(CargoDetailUrl + `/${id}`);
+    const rec = await api.get(`CargoDetail/${id}`);
     dispatch({ type: "cargoById", payload: rec.data });
   }
   catch (err) {
@@ -82,7 +78,7 @@ export const getCargoById = (id) => async (dispatch) => {
 };
 export const insertCargo = (x) => async (dispatch) => {
   try {
-    await axios.post(CargoDetailUrl, x).then((e) => {
+    await api.post("CargoDetail", x).then((e) => {
       dispatch({ type: "insertCargo", payload: e.data });
     });
   }
@@ -92,7 +88,7 @@ export const insertCargo = (x) => async (dispatch) => {
 };
 export const updateCargo = (id, x) => async (dispatch) => {
   try {
-    await axios.put(CargoDetailUrl + `/${id}`, x).then((e) => {
+    await api.put(`CargoDetail/${id}`, x).then((e) => {
       dispatch({ type: "updateCargo", payload: e.data });
     });
   }
@@ -102,7 +98,7 @@ export const updateCargo = (id, x) => async (dispatch) => {
 };
 export const deleteCargo = (id) => async (dispatch) => {
   try {
-    await axios.delete(CargoDetailUrl + `/${id}`).then(() => {
+    await api.delete(`CargoDetail/${id}`).then(() => {
       dispatch({ type: "deleteCargo", payload: id });
     });
   }
@@ -112,10 +108,9 @@ export const deleteCargo = (id) => async (dispatch) => {
 };
 
 //Customer
-const customerUrl = mainUrl + "Customer";
 export const getCustomer = () => async (dispatch) => {
   try {
-    const rec = await axios.get(customerUrl);
+    const rec = await api.get("Customer");
     dispatch({ type: "getCustomer", payload: rec.data });
   }
   catch (err) {
@@ -124,7 +119,7 @@ export const getCustomer = () => async (dispatch) => {
 };
 export const getCustomerById = (id) => async (dispatch) => {
   try {
-    const rec = await axios.get(customerUrl + `/${id}`);
+    const rec = await api.get(`Customer/${id}`);
     dispatch({ type: "customerById", payload: rec.data });
   }
   catch (err) {
@@ -133,7 +128,7 @@ export const getCustomerById = (id) => async (dispatch) => {
 };
 export const insertCustomer = (x, recordInsertMessage) => async (dispatch) => {
   try {
-    await axios.post(customerUrl, x).then((e) => {
+    await api.post("Customer", x).then((e) => {
       dispatch({ type: "insertCustomer", payload: e.data });
       recordInsertMessage();
     });
@@ -144,7 +139,7 @@ export const insertCustomer = (x, recordInsertMessage) => async (dispatch) => {
 };
 export const updateCustomer = (id, x, recordUpdatedMessage) => async (dispatch) => {
   try {
-    await axios.put(customerUrl + `/${id}`, x).then((e) => {
+    await api.put(`Customer/${id}`, x).then((e) => {
       dispatch({ type: "updateCustomer", payload: e.data });
       recordUpdatedMessage();
     });
@@ -155,7 +150,7 @@ export const updateCustomer = (id, x, recordUpdatedMessage) => async (dispatch) 
 };
 export const deleteCustomer = (id) => async (dispatch) => {
   try {
-    await axios.delete(customerUrl + `/${id}`).then(() => {
+    await api.delete(`Customer/${id}`).then(() => {
       dispatch({ type: "deleteCustomer", payload: id });
     });
   }
@@ -165,10 +160,9 @@ export const deleteCustomer = (id) => async (dispatch) => {
 };
 
 //GrossWeight
-const grossWeightUrl = mainUrl + "GrossWeight";
 export const getGrossWeight = () => async (dispatch) => {
   try {
-    const rec = await axios.get(grossWeightUrl + "/DTO");
+    const rec = await api.get("GrossWeight/DTO");
     dispatch({ type: "getGrossWeight", payload: rec.data });
   }
   catch (err) {
@@ -177,7 +171,7 @@ export const getGrossWeight = () => async (dispatch) => {
 };
 export const insertGrossWeight = (x) => async (dispatch) => {
   try {
-    await axios.post(grossWeightUrl, x).then((e) => {
+    await api.post("GrossWeight", x).then((e) => {
       dispatch({ type: "insertGrossWeight", payload: e.data });
     });
   }
@@ -187,7 +181,7 @@ export const insertGrossWeight = (x) => async (dispatch) => {
 };
 export const updateGrossWeight = (x) => async (dispatch) => {
   try {
-    await axios.post(grossWeightUrl, x).then((e) => {
+    await api.put("GrossWeight", x).then((e) => {
       dispatch({ type: "updateGrossWeight", payload: e.data });
     });
   }
@@ -197,7 +191,7 @@ export const updateGrossWeight = (x) => async (dispatch) => {
 };
 export const deleteGrossWeight = (id) => async (dispatch) => {
   try {
-    await axios.delete(grossWeightUrl + `/${id}`).then(() => {
+    await api.delete(`GrossWeight/${id}`).then(() => {
       dispatch({ type: "deleteGrossWeight", payload: id });
     });
   }
@@ -207,10 +201,9 @@ export const deleteGrossWeight = (id) => async (dispatch) => {
 };
 
 //Job
-const jobUrl = mainUrl + "Job";
 export const getJob = () => async (dispatch) => {
   try {
-    const rec = await axios.get(jobUrl + "/DTOJobAsync");
+    const rec = await api.get("Job/DTOJobAsync");
     dispatch({ type: "getJob", payload: rec.data });
   }
   catch (err) {
@@ -219,7 +212,7 @@ export const getJob = () => async (dispatch) => {
 };
 export const getJobByUserId = (id) => async (dispatch) => {
   try {
-    const rec = await axios.get(jobUrl + "/JobsByUserIdAsync/" + `${id}`);
+    const rec = await api.get("Job/JobsByUserIdAsync/" + `${id}`);
     dispatch({ type: "jobsByUserIdResponse", payload: rec.data });
   }
   catch (err) {
@@ -228,7 +221,7 @@ export const getJobByUserId = (id) => async (dispatch) => {
 };
 export const insertJob = (x, loadStates, resetFormControls, recordInsertedMessage, setInsertJobArr) => async (dispatch) => {
   try {
-    await axios.post(jobUrl, x).then((e) => {
+    await api.post("Job", x).then((e) => {
       dispatch({ type: "insertJob", payload: e.data });
       setInsertJobArr(e.data);
       dispatch(maxIdJob());
@@ -243,7 +236,7 @@ export const insertJob = (x, loadStates, resetFormControls, recordInsertedMessag
 };
 export const updateJob = (id, x, loadStates, recordUpdatedMessage) => async (dispatch) => {
   try {
-    await axios.put(jobUrl + `/${id}`, x).then((e) => {
+    await api.put(`Job/${id}`, x).then((e) => {
       dispatch({ type: "updateJob", payload: e.data });
       if (loadStates) loadStates();
       recordUpdatedMessage();
@@ -255,7 +248,7 @@ export const updateJob = (id, x, loadStates, recordUpdatedMessage) => async (dis
 };
 export const deleteJob = (id) => async (dispatch) => {
   try {
-    await axios.delete(jobUrl + `/${id}`).then(() => {
+    await api.delete(`Job/${id}`).then(() => {
       dispatch({ type: "deleteJob", payload: id });
     });
   }
@@ -265,7 +258,7 @@ export const deleteJob = (id) => async (dispatch) => {
 };
 export const maxIdJob = () => async (dispatch) => {
   try {
-    await axios.get(jobUrl + "/max-id").then((e) => {
+    await api.get("Job/max-id").then((e) => {
       dispatch({ type: "maxIdJob", payload: e.data });
     });
   }
@@ -275,7 +268,7 @@ export const maxIdJob = () => async (dispatch) => {
 };
 export const jobById = (id) => async (dispatch) => {
   try {
-    await axios.get(jobUrl + `/${id}`).then((e) => {
+    await api.get(`Job/${id}`).then((e) => {
       dispatch({ type: "jobById", payload: e.data });
     });
   }
@@ -285,7 +278,7 @@ export const jobById = (id) => async (dispatch) => {
 };
 export const updateJobCheckStatus = (column, x, isChecked, updateStatusMessage) => async (dispatch) => {
   try {
-    await axios.put(jobUrl + '/UpdateCheckedStatus', { jobId: x.jobId, step: column.charAt(0).toUpperCase() + column.slice(1), isChecked: isChecked }).then((e) => {
+    await api.put('Job/UpdateCheckedStatus', { jobId: x.jobId, step: column.charAt(0).toUpperCase() + column.slice(1), isChecked: isChecked }).then((e) => {
       dispatch({ type: "updateJobCheckStatus", payload: e.data });
       updateStatusMessage();
     });
@@ -295,12 +288,10 @@ export const updateJobCheckStatus = (column, x, isChecked, updateStatusMessage) 
   }
 };
 
-
 //JobType
-const jobTypeUrl = mainUrl + "JobType";
 export const getJobType = () => async (dispatch) => {
   try {
-    const rec = await axios.get(jobTypeUrl + "/DTO");
+    const rec = await api.get("JobType/DTO");
     dispatch({ type: "getJobType", payload: rec.data });
   }
   catch (err) {
@@ -309,7 +300,7 @@ export const getJobType = () => async (dispatch) => {
 };
 export const insertJobType = (x) => async (dispatch) => {
   try {
-    await axios.post(jobTypeUrl, x).then((e) => {
+    await api.post("JobType", x).then((e) => {
       dispatch({ type: "insertJobType", payload: e.data });
     });
   }
@@ -319,7 +310,7 @@ export const insertJobType = (x) => async (dispatch) => {
 };
 export const updateJobType = (x) => async (dispatch) => {
   try {
-    await axios.post(jobTypeUrl, x).then((e) => {
+    await api.post("JobType", x).then((e) => {
       dispatch({ type: "updateJobType", payload: e.data });
     });
   }
@@ -329,7 +320,7 @@ export const updateJobType = (x) => async (dispatch) => {
 };
 export const deleteJobType = (id) => async (dispatch) => {
   try {
-    await axios.delete(jobTypeUrl + `/${id}`).then(() => {
+    await api.delete(`JobType/${id}`).then(() => {
       dispatch({ type: "deleteJobType", payload: id });
     });
   }
@@ -339,10 +330,9 @@ export const deleteJobType = (id) => async (dispatch) => {
 };
 
 //LoadingTerm
-const loadingTermUrl = mainUrl + "LoadingTerm";
 export const getLoadingTerm = () => async (dispatch) => {
   try {
-    const rec = await axios.get(loadingTermUrl + "/DTO");
+    const rec = await api.get("LoadingTerm/DTO");
     dispatch({ type: "getLoadingTerm", payload: rec.data });
   }
   catch (err) {
@@ -351,7 +341,7 @@ export const getLoadingTerm = () => async (dispatch) => {
 };
 export const insertLoadingTerm = (x) => async (dispatch) => {
   try {
-    await axios.post(loadingTermUrl, x).then((e) => {
+    await api.post("LoadingTerm", x).then((e) => {
       dispatch({ type: "insertLoadingTerm", payload: e.data });
     });
   }
@@ -361,7 +351,7 @@ export const insertLoadingTerm = (x) => async (dispatch) => {
 };
 export const updateLoadingTerm = (x) => async (dispatch) => {
   try {
-    await axios.post(loadingTermUrl, x).then((e) => {
+    await api.post("LoadingTerm", x).then((e) => {
       dispatch({ type: "updateLoadingTerm", payload: e.data });
     });
   }
@@ -371,7 +361,7 @@ export const updateLoadingTerm = (x) => async (dispatch) => {
 };
 export const deleteLoadingTerm = (id) => async (dispatch) => {
   try {
-    await axios.delete(loadingTermUrl + `/${id}`).then(() => {
+    await api.delete(`LoadingTerm/${id}`).then(() => {
       dispatch({ type: "deleteLoadingTerm", payload: id });
     });
   }
@@ -381,10 +371,9 @@ export const deleteLoadingTerm = (id) => async (dispatch) => {
 };
 
 //Location
-const locationUrl = mainUrl + "Location";
 export const getLocation = () => async (dispatch) => {
   try {
-    const rec = await axios.get(locationUrl + "/DTO");
+    const rec = await api.get("Location/DTO");
     dispatch({ type: "getLocation", payload: rec.data });
   }
   catch (err) {
@@ -393,7 +382,7 @@ export const getLocation = () => async (dispatch) => {
 };
 export const insertLocation = (x) => async (dispatch) => {
   try {
-    await axios.post(locationUrl, x).then((e) => {
+    await api.post("Location", x).then((e) => {
       dispatch({ type: "insertLocation", payload: e.data });
     });
   }
@@ -403,7 +392,7 @@ export const insertLocation = (x) => async (dispatch) => {
 };
 export const updateLocation = (x) => async (dispatch) => {
   try {
-    await axios.post(locationUrl, x).then((e) => {
+    await api.put("Location", x).then((e) => {
       dispatch({ type: "updateLocation", payload: e.data });
     });
   }
@@ -413,7 +402,7 @@ export const updateLocation = (x) => async (dispatch) => {
 };
 export const deleteLocation = (id) => async (dispatch) => {
   try {
-    await axios.delete(locationUrl + `/${id}`).then(() => {
+    await api.delete(`Location/${id}`).then(() => {
       dispatch({ type: "deleteLocation", payload: id });
     });
   }
@@ -423,10 +412,9 @@ export const deleteLocation = (id) => async (dispatch) => {
 };
 
 //NetWeight
-const netWeightUrl = mainUrl + "NetWeight";
 export const getNetWeight = () => async (dispatch) => {
   try {
-    const rec = await axios.get(netWeightUrl + "/DTO");
+    const rec = await api.get("NetWeight/DTO");
     dispatch({ type: "getNetWeight", payload: rec.data });
   }
   catch (err) {
@@ -435,7 +423,7 @@ export const getNetWeight = () => async (dispatch) => {
 };
 export const insertNetWeight = (x) => async (dispatch) => {
   try {
-    await axios.post(netWeightUrl, x).then((e) => {
+    await api.post("NetWeight", x).then((e) => {
       dispatch({ type: "insertNetWeight", payload: e.data });
     });
   }
@@ -445,7 +433,7 @@ export const insertNetWeight = (x) => async (dispatch) => {
 };
 export const updateNetWeight = (x) => async (dispatch) => {
   try {
-    await axios.post(netWeightUrl, x).then((e) => {
+    await api.post("NetWeight", x).then((e) => {
       dispatch({ type: "updateNetWeight", payload: e.data });
     });
   }
@@ -455,7 +443,7 @@ export const updateNetWeight = (x) => async (dispatch) => {
 };
 export const deleteNetWeight = (id) => async (dispatch) => {
   try {
-    await axios.delete(netWeightUrl + `/${id}`).then(() => {
+    await api.delete(`NetWeight/${id}`).then(() => {
       dispatch({ type: "deleteNetWeight", payload: id });
     });
   }
@@ -465,10 +453,9 @@ export const deleteNetWeight = (id) => async (dispatch) => {
 };
 
 //NoOfContainer
-const noOfContainerUrl = mainUrl + "NoOfContainer";
 export const getNoOfContainer = () => async (dispatch) => {
   try {
-    const rec = await axios.get(noOfContainerUrl + "/DTO");
+    const rec = await api.get("NoOfContainer/DTO");
     dispatch({ type: "getNoOfContainer", payload: rec.data });
   }
   catch (err) {
@@ -477,7 +464,7 @@ export const getNoOfContainer = () => async (dispatch) => {
 };
 export const insertNoOfContainer = (x) => async (dispatch) => {
   try {
-    await axios.post(noOfContainerUrl, x).then((e) => {
+    await api.post("NoOfContainer", x).then((e) => {
       dispatch({ type: "insertNoOfContainer", payload: e.data });
     });
   }
@@ -487,7 +474,7 @@ export const insertNoOfContainer = (x) => async (dispatch) => {
 };
 export const updateNoOfContainer = (x) => async (dispatch) => {
   try {
-    await axios.post(noOfContainerUrl, x).then((e) => {
+    await api.post("NoOfContainer", x).then((e) => {
       dispatch({ type: "updateNoOfContainer", payload: e.data });
     });
   }
@@ -497,7 +484,7 @@ export const updateNoOfContainer = (x) => async (dispatch) => {
 };
 export const deleteNoOfContainer = (id) => async (dispatch) => {
   try {
-    await axios.delete(noOfContainerUrl + `/${id}`).then(() => {
+    await api.delete(`NoOfContainer/${id}`).then(() => {
       dispatch({ type: "deleteNoOfContainer", payload: id });
     });
   }
@@ -507,10 +494,9 @@ export const deleteNoOfContainer = (id) => async (dispatch) => {
 };
 
 //PortOfDischarge
-const portOfDischargeUrl = mainUrl + "PortOfDischarge";
 export const getPortOfDischarge = () => async (dispatch) => {
   try {
-    const rec = await axios.get(portOfDischargeUrl + "/DTO");
+    const rec = await api.get("PortOfDischarge/DTO");
     dispatch({ type: "getPortOfDischarge", payload: rec.data });
   }
   catch (err) {
@@ -519,7 +505,7 @@ export const getPortOfDischarge = () => async (dispatch) => {
 };
 export const insertPortOfDischarge = (x) => async (dispatch) => {
   try {
-    await axios.post(portOfDischargeUrl, x).then((e) => {
+    await api.post("PortOfDischarge", x).then((e) => {
       dispatch({ type: "insertPortOfDischarge", payload: e.data });
     });
   }
@@ -529,7 +515,7 @@ export const insertPortOfDischarge = (x) => async (dispatch) => {
 };
 export const updatePortOfDischarge = (x) => async (dispatch) => {
   try {
-    await axios.post(portOfDischargeUrl, x).then((e) => {
+    await api.post("PortOfDischarge", x).then((e) => {
       dispatch({ type: "updatePortOfDischarge", payload: e.data });
     });
   }
@@ -539,7 +525,7 @@ export const updatePortOfDischarge = (x) => async (dispatch) => {
 };
 export const deletePortOfDischarge = (id) => async (dispatch) => {
   try {
-    await axios.delete(portOfDischargeUrl + `/${id}`).then(() => {
+    await api.delete(`PortOfDischarge/${id}`).then(() => {
       dispatch({ type: "deletePortOfDischarge", payload: id });
     });
   }
@@ -549,10 +535,9 @@ export const deletePortOfDischarge = (id) => async (dispatch) => {
 };
 
 //PortOfLoading
-const portOfLoadingUrl = mainUrl + "PortOfLoading";
 export const getPortOfLoading = () => async (dispatch) => {
   try {
-    const rec = await axios.get(portOfLoadingUrl + "/DTO");
+    const rec = await api.get("PortOfLoading/DTO");
     dispatch({ type: "getPortOfLoading", payload: rec.data });
   }
   catch (err) {
@@ -561,7 +546,7 @@ export const getPortOfLoading = () => async (dispatch) => {
 };
 export const insertPortOfLoading = (x) => async (dispatch) => {
   try {
-    await axios.post(portOfLoadingUrl, x).then((e) => {
+    await api.post("PortOfLoading", x).then((e) => {
       dispatch({ type: "insertPortOfLoading", payload: e.data });
     });
   }
@@ -571,7 +556,7 @@ export const insertPortOfLoading = (x) => async (dispatch) => {
 };
 export const updatePortOfLoading = (x) => async (dispatch) => {
   try {
-    await axios.post(portOfLoadingUrl, x).then((e) => {
+    await api.put("PortOfLoading", x).then((e) => {
       dispatch({ type: "updatePortOfLoading", payload: e.data });
     });
   }
@@ -581,7 +566,7 @@ export const updatePortOfLoading = (x) => async (dispatch) => {
 };
 export const deletePortOfLoading = (id) => async (dispatch) => {
   try {
-    await axios.delete(portOfLoadingUrl + `/${id}`).then(() => {
+    await api.delete(`PortOfLoading/${id}`).then(() => {
       dispatch({ type: "deletePortOfLoading", payload: id });
     });
   }
@@ -591,10 +576,9 @@ export const deletePortOfLoading = (id) => async (dispatch) => {
 };
 
 //ShippingLine
-const shippingLineUrl = mainUrl + "ShippingLine";
 export const getShippingLine = () => async (dispatch) => {
   try {
-    const rec = await axios.get(shippingLineUrl + "/DTO");
+    const rec = await api.get("ShippingLine/DTO");
     dispatch({ type: "getShippingLine", payload: rec.data });
   }
   catch (err) {
@@ -603,7 +587,7 @@ export const getShippingLine = () => async (dispatch) => {
 };
 export const insertShippingLine = (x) => async (dispatch) => {
   try {
-    await axios.post(shippingLineUrl, x).then((e) => {
+    await api.post("ShippingLine", x).then((e) => {
       dispatch({ type: "insertShippingLine", payload: e.data });
     });
   }
@@ -613,7 +597,7 @@ export const insertShippingLine = (x) => async (dispatch) => {
 };
 export const updateShippingLine = (x) => async (dispatch) => {
   try {
-    await axios.post(shippingLineUrl, x).then((e) => {
+    await api.put("ShippingLine", x).then((e) => {
       dispatch({ type: "updateShippingLine", payload: e.data });
     });
   }
@@ -623,7 +607,7 @@ export const updateShippingLine = (x) => async (dispatch) => {
 };
 export const deleteShippingLine = (id) => async (dispatch) => {
   try {
-    await axios.delete(shippingLineUrl + `/${id}`).then(() => {
+    await api.delete(`ShippingLine/${id}`).then(() => {
       dispatch({ type: "deleteShippingLine", payload: id });
     });
   }
@@ -633,10 +617,9 @@ export const deleteShippingLine = (id) => async (dispatch) => {
 };
 
 //User
-const userUrl = mainUrl + "User";
 export const getUser = () => async (dispatch) => {
   try {
-    const rec = await axios.get(userUrl + "/DTOUsers");
+    const rec = await api.get("User/DTOUsers");
     dispatch({ type: "getUser", payload: rec.data });
   }
   catch (err) {
@@ -645,7 +628,7 @@ export const getUser = () => async (dispatch) => {
 };
 export const getUserById = (id) => async (dispatch) => {
   try {
-    const rec = await axios.get(userUrl + `/${id}`);
+    const rec = await api.get(`User/${id}`);
     dispatch({ type: "getUserById", payload: rec.data });
   }
   catch (err) {
@@ -654,7 +637,7 @@ export const getUserById = (id) => async (dispatch) => {
 };
 export const insertUser = (x, recordInsertMessage, onClose) => async (dispatch) => {
   try {
-    await axios.post(userUrl, x).then((e) => {
+    await api.post("User", x).then((e) => {
       dispatch({ type: "insertUser", payload: e.data });
       recordInsertMessage();
       onClose();
@@ -666,7 +649,7 @@ export const insertUser = (x, recordInsertMessage, onClose) => async (dispatch) 
 };
 export const updateUser = (id, x, recordUpdatedMessage) => async (dispatch) => {
   try {
-    await axios.put(userUrl + `/${id}`, x).then((e) => {
+    await api.put(`User/${id}`, x).then((e) => {
       dispatch({ type: "updateUser", payload: e.data });
       recordUpdatedMessage();
     });
@@ -677,7 +660,7 @@ export const updateUser = (id, x, recordUpdatedMessage) => async (dispatch) => {
 };
 export const deleteUser = (id) => async (dispatch) => {
   try {
-    await axios.delete(userUrl + `/${id}`).then(() => {
+    await api.delete(`User/${id}`).then(() => {
       dispatch({ type: "deleteUser", payload: id });
     });
   }
@@ -687,10 +670,9 @@ export const deleteUser = (id) => async (dispatch) => {
 };
 
 //Login
-const loginUrl = mainUrl + "Login";
 export const login = (x, onSuccess, onError) => async (dispatch) => {
   try {
-    await axios.post(loginUrl, x).then((e) => {
+    await api.post("Login", x).then((e) => {
       dispatch({ type: "loginResponse", payload: e.data });
       if (onSuccess) onSuccess(e.data);
     });
@@ -701,10 +683,9 @@ export const login = (x, onSuccess, onError) => async (dispatch) => {
 };
 
 //Vessel
-const vesselUrl = mainUrl + "Vessel";
 export const getVessel = () => async (dispatch) => {
   try {
-    const rec = await axios.get(vesselUrl + "/DTO");
+    const rec = await api.get("Vessel/DTO");
     dispatch({ type: "getVessel", payload: rec.data });
   }
   catch (err) {
@@ -713,7 +694,7 @@ export const getVessel = () => async (dispatch) => {
 };
 export const insertVessel = (x) => async (dispatch) => {
   try {
-    await axios.post(vesselUrl, x).then((e) => {
+    await api.post("Vessel", x).then((e) => {
       dispatch({ type: "insertVessel", payload: e.data });
     });
   }
@@ -723,7 +704,7 @@ export const insertVessel = (x) => async (dispatch) => {
 };
 export const updateVessel = (x) => async (dispatch) => {
   try {
-    await axios.post(vesselUrl, x).then((e) => {
+    await api.post("Vessel", x).then((e) => {
       dispatch({ type: "updateVessel", payload: e.data });
     });
   }
@@ -733,7 +714,7 @@ export const updateVessel = (x) => async (dispatch) => {
 };
 export const deleteVessel = (id) => async (dispatch) => {
   try {
-    await axios.delete(vesselUrl + `/${id}`).then(() => {
+    await api.delete(`Vessel/${id}`).then(() => {
       dispatch({ type: "deleteVessel", payload: id });
     });
   }
@@ -742,12 +723,10 @@ export const deleteVessel = (id) => async (dispatch) => {
   }
 };
 
-
 //JobAssign
-const jobAssignUrl = mainUrl + "JobAssign";
 export const insertJobAssign = (x) => async (dispatch) => {
   try {
-    await axios.post(jobAssignUrl, x).then((e) => {
+    await api.post("JobAssign", x).then((e) => {
       dispatch({ type: "updateJobAssign", payload: e.data });
     });
   }
@@ -757,7 +736,7 @@ export const insertJobAssign = (x) => async (dispatch) => {
 };
 export const updateJobAssign = (id, x) => async (dispatch) => {
   try {
-    await axios.put(jobAssignUrl + `/${id}`, x).then((e) => {
+    await api.put(`JobAssign/${id}`, x).then((e) => {
       dispatch({ type: "updateJobAssign", payload: e.data });
     });
   }
@@ -767,7 +746,7 @@ export const updateJobAssign = (id, x) => async (dispatch) => {
 };
 export const existsJobAssign = (id, x) => async (dispatch) => {
   try {
-    await axios.get(jobAssignUrl + '/ExistsAsync?id=' + `${id}`).then((e) => {
+    await api.get('JobAssign/ExistsAsync?id=' + `${id}`).then((e) => {
       if (e.data === true && id > 0)
         dispatch(updateJobAssign(id, x));
       else
@@ -779,8 +758,6 @@ export const existsJobAssign = (id, x) => async (dispatch) => {
     console.log(err.message);
   }
 };
-
-
 
 //InvID
 export const invIDVar = "InvID";
