@@ -69,7 +69,7 @@ function EditJob() {
 
     useEffect(() => {
         loadStates();
-    }, [dispatch]);
+    }, [loadStates, dispatch]);
 
     //CargoDetail
     useEffect(() => {
@@ -186,7 +186,7 @@ function EditJob() {
         setJobId(id);
         if (id)
             dispatch(jobById(id));
-    }, [dispatch,id]);
+    }, [dispatch, id]);
 
     //Options
     const [cargoOpt, setCargoOpt] = useState([]);
@@ -279,7 +279,7 @@ function EditJob() {
                 Dates: singleJobArrs?.createdDate ? dayjs(singleJobArrs?.createdDate) : dayjs(new Date().toISOString()),
             });
         }
-    }, [singleJobArrs]);
+    }, [customerArrs, customerOpt, form, forms, singleJobArrs]);
 
     //============= Update ============
     const updateFunc = (x) => {

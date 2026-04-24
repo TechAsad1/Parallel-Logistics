@@ -85,7 +85,7 @@ function NewJob() {
             EtaPod: dayjs()
         });
         loadStates();
-    }, [forms, dispatch]);
+    }, [forms, loadStates, dispatch]);
 
 
     //CargoDetail
@@ -368,7 +368,7 @@ function NewJob() {
 
     return (
         <>
-            <Layout style={{minHeight:'100vh'}}>
+            <Layout style={{ minHeight: '100vh' }}>
                 <SideBar />
                 <Content style={{ margin: '0 16px' }}>
 

@@ -385,7 +385,7 @@ function Jobs() {
                 User: [usr]
             });
         }
-    }, [forms, selectedJob, modalOpen]);
+    }, [forms, userOpt, selectedJob, modalOpen]);
 
 
     //PDF
