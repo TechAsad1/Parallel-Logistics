@@ -1,11 +1,10 @@
 import React from "react";
-import { Layout, Card, Row, Col, Typography, Table, Space, DatePicker, Progress, Tag } from "antd";
+import { Layout, Card, Row, Col, Typography, Table, DatePicker, Progress, Tag } from "antd";
 import { ArrowRightOutlined } from "@ant-design/icons";
 import { LineChart } from "@mui/x-charts/LineChart";
 import { PieChart } from "@mui/x-charts";
 import { lineClasses } from "@mui/x-charts/LineChart";
 import { BarChart } from "@mui/x-charts/BarChart";
-import { labelMarkClasses } from "@mui/x-charts/ChartsLabel";
 import { useDispatch, useSelector } from 'react-redux';
 import { GetJobProgressByUserIdAsync, GetJobSummaryMonthWiseByUserIdAsync, GetJobSummaryCountByUserIdAsync } from '../../redux/Action';
 import { useEffect, useState } from 'react';
@@ -42,42 +41,6 @@ const Dashboard = () => {
     dispatch(GetJobSummaryMonthWiseByUserIdAsync(user, fromDate, toDate));
     dispatch(GetJobSummaryCountByUserIdAsync(user, fromDate, toDate));
   }, [fromDate, toDate]);
-
-
-  // 📊 Line Data
-  const uData = [4000, 3000, 2000, 2780, 1890, 2390, 3490];
-  const pData = [2400, 1398, 9800, 3908, 4800, 3800, 4300];
-
-  const xLabels = [
-    "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"
-  ];
-
-
-  // const xLabels = [
-  //   "Filling", "Invoice", "DocumentCheck", "EDI", "CustomGD", "TestoAppointment", "CargoEntryConfirmation", "ScanningInspection", "CustomPayment", "FinalClearance", "LoadPermit"
-  // ];
-
-
-  // const [completedJobs, setCompletedJobs] = useState([]);
-  // const [jobIds, setJobIds] = useState([]);
-
-
-  // const dataset = jobStatusForDashboardArrs.map(job => ({
-  //   jobId: job.jobId,
-  //   Filling: job.filling ? 1 : 0,
-  //   Invoice: job.invoice ? 1 : 0,
-  //   DocumentCheck: job.documentCheck ? 1 : 0,
-  //   EDI: job.edi ? 1 : 0,
-  //   CustomGD: job.customGD ? 1 : 0,
-  //   TestoAppointment: job.testoAppointment ? 1 : 0,
-  //   CargoEntryConfirmation: job.cargoEntryConfirmation ? 1 : 0,
-  //   ScanningInspection: job.scanningInspection ? 1 : 0,
-  //   CustomPayment: job.customPayment ? 1 : 0,
-  //   FinalClearance: job.finalClearance ? 1 : 0,
-  //   LoadPermit: job.loadPermit ? 1 : 0,
-  // }));
-
-  // 🥧 Pie Data
   const pieData = [
     { id: 0, value: jobSummaryCountArrs?.totalJobs, label: "Total" },
     { id: 1, value: jobSummaryCountArrs?.activeJobs, label: "In Progress" },
@@ -121,19 +84,6 @@ const Dashboard = () => {
       return { ...step, diff };
     });
   };
-
-  const rawData = [
-    {
-      id: 1,
-      jobId: "JOB-001",
-      steps: [
-        { name: "Filling", date: "2026-04-01" },
-        { name: "Invoice", date: "2026-04-03" },
-        { name: "CustomGD", date: "2026-04-06" },
-        { name: "Final", date: "2026-04-07" },
-      ],
-    },
-  ];
 
 
   const columns = [

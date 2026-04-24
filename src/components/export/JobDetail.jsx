@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Button, Flex, Table, Typography, Layout } from 'antd';
+import { Button, Typography, Layout } from 'antd';
 import { createStyles } from 'antd-style';
 import { Link, useParams } from 'react-router-dom';
 import { Content } from 'antd/es/layout/layout';
@@ -30,79 +30,13 @@ const useStyle = createStyles(({ css, token }) => {
   };
 });
 const { Text } = Typography;
-const columns = [
-  {
-    title: 'Name',
-    dataIndex: 'name',
-  },
-  {
-    title: 'Borrow',
-    dataIndex: 'borrow',
-  },
-  {
-    title: 'Repayment',
-    dataIndex: 'repayment',
-  },
-];
-const dataSource = [
-  {
-    key: '1',
-    name: 'John Brown',
-    borrow: 10,
-    repayment: 33,
-  },
-  {
-    key: '2',
-    name: 'Jim Green',
-    borrow: 100,
-    repayment: 0,
-  },
-  {
-    key: '3',
-    name: 'Joe Black',
-    borrow: 10,
-    repayment: 10,
-  },
-  {
-    key: '4',
-    name: 'Jim Red',
-    borrow: 75,
-    repayment: 45,
-  },
-];
-const fixedColumns = [
-  {
-    title: 'Name',
-    dataIndex: 'name',
-    fixed: true,
-    width: 100,
-  },
-  {
-    title: 'Description',
-    dataIndex: 'description',
-  },
-];
-const fixedDataSource = Array.from({ length: 20 }).map((_, i) => ({
-  key: i,
-  name: ['Light', 'Bamboo', 'Little'][i % 3],
-  description: 'Everything that has a beginning, has an end.',
-}));
 const JobDetail = () => {
   const { id } = useParams();
-  const { styles } = useStyle();
   const dispatch = useDispatch();
 
   const cargoDetailArrs = useSelector((state) => state.cargoDetailArr);
   const customerArrs = useSelector((state) => state.customerArr);
-  const grossWeightArrs = useSelector((state) => state.grossWeightArr);
   const jobTypeArrs = useSelector((state) => state.jobTypeArr);
-  const loadingTermArrs = useSelector((state) => state.loadingTermArr);
-  const netWeightArrs = useSelector((state) => state.netWeightArr);
-  const noOfContainerArrs = useSelector((state) => state.noOfContainerArr);
-  const portOfDischargeArrs = useSelector((state) => state.portOfDischargeArr);
-  const portOfLoadingArrs = useSelector((state) => state.portOfLoadingArr);
-  const shippingLineArrs = useSelector((state) => state.shippingLineArr);
-  const vesselArrs = useSelector((state) => state.vesselArr);
   const jobArrs = useSelector((state) => state.jobArr);
 
   useEffect(() => {

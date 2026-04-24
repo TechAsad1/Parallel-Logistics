@@ -1,19 +1,12 @@
 import {
-    DesktopOutlined,
     DockerOutlined,
     DoubleLeftOutlined,
     DoubleRightOutlined,
-    FileOutlined,
-    SwitcherOutlined,
-    TeamOutlined,
     UsergroupAddOutlined,
-    UserOutlined,
-    DashboardOutlined
 } from '@ant-design/icons';
-import { Layout, Menu, Button, Modal } from 'antd';
-import { Link, Outlet, Route, Routes } from 'react-router-dom';
+import { Layout, Menu, Button } from 'antd';
+import { Link } from 'react-router-dom';
 import { HiMiniUserGroup } from "react-icons/hi2";
-import { HiMiniRectangleGroup } from "react-icons/hi2";
 import { RiDashboard3Fill } from "react-icons/ri";
 import { MdOutlineLogout } from "react-icons/md";
 import { useLocation } from "react-router-dom";
@@ -26,9 +19,8 @@ const SideBar = () => {
     const [collapsed, setCollapsed] = useState(false);
     const location = useLocation();
     const isAdmin = localStorage.getItem("isAdmin");
-    const { Content, Sider } = Layout;
+    const { Sider } = Layout;
     const navigate = useNavigate();
-    const isLoginPage = location.pathname === "/Login";
 
     useEffect(() => {
         const user = localStorage.getItem("user");

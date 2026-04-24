@@ -1,13 +1,8 @@
-import { Input, Button, Modal, Form, Row, Col } from "antd";
-import {
-    EyeOutlined,
-    EyeInvisibleOutlined,
-} from "@ant-design/icons";
-import { useEffect, useState } from "react";
+import { Input, Modal, Form, Row, Col } from "antd";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from 'react-redux';
 import { getCustomerById, updateCustomer } from '../../redux/Action';
 import Swal from 'sweetalert2';
-
 
 function EditCustomer({ open, onClose, selectedCustomer }) {
 

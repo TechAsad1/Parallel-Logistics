@@ -1,11 +1,10 @@
 import React from "react";
-import { Layout, Card, Row, Col, Typography, Table, Space, DatePicker, Progress, Tag, Select } from "antd";
+import { Layout, Card, Row, Col, Typography, Table, DatePicker, Progress, Tag, Select } from "antd";
 import { ArrowRightOutlined } from "@ant-design/icons";
 import { LineChart } from "@mui/x-charts/LineChart";
 import { PieChart } from "@mui/x-charts";
 import { lineClasses } from "@mui/x-charts/LineChart";
 import { BarChart } from "@mui/x-charts/BarChart";
-import { labelMarkClasses } from "@mui/x-charts/ChartsLabel";
 import { useDispatch, useSelector } from 'react-redux';
 import { getUser, GetJobProgressAsync, GetJobProgressByUserIdAsync, GetJobSummaryMonthWiseAsync, GetJobSummaryMonthWiseByUserIdAsync, GetJobSummaryCountAsync, GetJobSummaryCountByUserIdAsync } from '../../redux/Action';
 import { useEffect, useState } from 'react';
@@ -66,14 +65,6 @@ const AdminDashboard = () => {
     }
   }, [userId, fromDate, toDate]);
 
-  // 📊 Line Data
-  const uData = [4000, 3000, 2000, 2780, 1890, 2390, 3490];
-  const pData = [2400, 1398, 9800, 3908, 4800, 3800, 4300];
-
-  const xLabels = [
-    "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"
-  ];
-
   // 🥧 Pie Data
   const pieData = [
     { id: 0, value: jobSummaryCountArrs?.totalJobs, label: "Total" },
@@ -117,19 +108,6 @@ const AdminDashboard = () => {
       return { ...step, diff };
     });
   };
-
-  const rawData = [
-    {
-      id: 1,
-      jobId: "JOB-001",
-      steps: [
-        { name: "Filling", date: "2026-04-01" },
-        { name: "Invoice", date: "2026-04-03" },
-        { name: "CustomGD", date: "2026-04-06" },
-        { name: "Final", date: "2026-04-07" },
-      ],
-    },
-  ];
 
   const columns = [
     {

@@ -2,8 +2,8 @@ import React from "react";
 import { Row, Col, Form, Input, Button, Typography, Card } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import logistic from '../images/logistic.png';
-import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from 'react-redux';
+import { useState } from "react";
+import { useDispatch } from 'react-redux';
 import { login } from '../../redux/Action';
 import { useNavigate } from "react-router-dom";
 
@@ -28,7 +28,6 @@ const Login = () => {
           setError("");
           localStorage.setItem("user", JSON.stringify(data.userId));
           localStorage.setItem("isAdmin", JSON.stringify(data.isAdmin));
-          const user = localStorage.getItem("user");
           setTimeout(() => {
             navigate("/job");
           }, 800);

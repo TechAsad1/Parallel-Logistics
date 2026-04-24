@@ -8,7 +8,6 @@ import { useEffect, useState } from 'react';
 import { formatDate } from '../Helper';
 import { useDispatch, useSelector } from 'react-redux';
 import { getCargo, getCustomer, getGrossWeight, getJobType, getLoadingTerm, getNetWeight, getNoOfContainer, getPortOfDischarge, getPortOfLoading, getShippingLine, getVessel, insertJob, jobById, maxIdJob, updateJob } from '../../redux/Action';
-// import { format } from "date-fns";
 import { Navigate } from "react-router-dom";
 import SideBar from '../SideBar.jsx'
 
@@ -479,20 +478,8 @@ function EditJob() {
             let job = [];
             let cargo = [];
             let customer = [];
-            // if (jobArr.jobTypeId > 0)
-            //     job = jobTypeArrs.find((i) => i.jobTypeId === jobArr.jobTypeId);
-            // if (jobArr.cargoDetailId > 0)
-            //     cargo = cargoDetailArrs.find((i) => i.cargoId === jobArr.cargoDetailId);
             if (singleJobArrs.customerId)
                 customer = customerArrs.find((i) => i.customerId === singleJobArrs.customerId);
-
-            // if (jobTypeOpt) {
-            //     const opt = jobTypeOpt.find((i) => i.label === job.jobTypeDesc);
-            //     setSelectJobType(opt);
-            //     forms.setFieldsValue({
-            //         JobType: [opt]
-            //     });
-            // }
 
             if (customerOpt) {
                 const opt = customerOpt.find((i) => i.value === customer.customerId);
@@ -507,15 +494,6 @@ function EditJob() {
                     customerName: opt?.label
                 });
             }
-
-
-            // if (cargoOpt) {
-            //     const opt = cargoOpt.find((i) => i.label === cargo.cargoDetailDesc);
-            //     setSelectCargo(opt);
-            //     forms.setFieldsValue({
-            //         CargoDetail: [opt]
-            //     });
-            // }
 
             forms.setFieldsValue({
                 JobType: singleJobArrs.jobType ? [singleJobArrs.jobType] : undefined,
@@ -539,29 +517,6 @@ function EditJob() {
                 CuttOfDateVessel: singleJobArrs?.cuttOfDateVessel ? dayjs(singleJobArrs?.cuttOfDateVessel) : dayjs(new Date().toISOString()),
                 Dates: singleJobArrs?.createdDate ? dayjs(singleJobArrs?.createdDate) : dayjs(new Date().toISOString()),
             });
-            // setForm({
-            //     ...form,
-            //     cargoDetailName: cargo.cargoDetailDesc,
-            //     cuttDate: form.cuttDate,
-            //     vesselDate: form.vesselDate,
-            //     polDate: form.polDate,
-            //     podDate: form.podDate,
-            //     date: new Date(),
-            //     jobType: singleJobArrs.jobTypeDesc,
-            //     customerId: customer.customerId,
-            //     customerName: customer.customerName,
-            //     grossWeight: singleJobArrs.grossWeight,
-            //     netWeight: singleJobArrs.netWeight,
-            //     noOfContainer: singleJobArrs.numberOfContainer,
-            //     portOfLoading: singleJobArrs.portOfLoading,
-            //     portOfDischarge: singleJobArrs.portOfDischarge,
-            //     loadingTerm: singleJobArrs.loadingTerm,
-            //     shippingLine: singleJobArrs.shippingLine,
-            //     vessel: singleJobArrs.vessel,
-            //     days: singleJobArrs.transitTimeDays,
-            //     freeDays: singleJobArrs.freeDaysAtPod,
-            //     comment: singleJobArrs.comment
-            // });
         }
     }, [singleJobArrs]);
 
@@ -668,13 +623,13 @@ function EditJob() {
     }
 
     const dateFormat = 'YYYY/MM/DD';
-
     const user = localStorage.getItem("user");
     if (!user) return <Navigate to="/login" />;
 
+
     return (
         <>
-            <Layout style={{minHeight:'100vh'}}>
+            <Layout style={{ minHeight: '100vh' }}>
                 <SideBar />
                 <Content style={{ margin: '0 16px' }}>
 
