@@ -248,229 +248,6 @@ function EditJob() {
             });
         }
     }
-    const setSelectCargoFunc = (val, opt) => {
-        // if (!val || val?.length === 0) {
-        //     setSelectCargo([]);
-        //     setForm({ ...form, cargoDetailName: "" });
-        //     return;
-        // }
-        // if (!opt[0].value) {
-        //     const name = val[0];
-        //     setSelectCargo([name]);
-        //     setForm({ ...form, cargoDetailName: name });
-        // }
-        // else {
-        //     setSelectCargo([opt[0].value]);
-        //     setForm({ ...form, cargoDetailName: opt[0].label });
-        // }
-    };
-    const setSelectJobTypeFunc = (val, opt) => {
-        if (!val || val.length === 0) {
-            setSelectJobType(null);
-            setForm({ ...form, jobType: "" });
-            return;
-        }
-        if (val.length > 1) return;
-        if (!opt[0].value) {
-            const name = val[0];
-            setSelectJobType([name]);
-            setForm({
-                ...form,
-                jobType: name
-            });
-        }
-        else {
-            setSelectJobType([opt[0].value]);
-            setForm({
-                ...form,
-                jobType: opt[0].label
-            });
-        }
-    }
-    const setSelectGrossWeightFunc = (val, opt) => {
-        if (!val || val.length === 0) {
-            setSelectGrossWeight(null);
-            setForm({ ...form, grossWeight: "" });
-            return;
-        }
-        if (val.length > 1) return;
-        if (!opt[0].value) {
-            const name = val[0];
-            setSelectGrossWeight([name]);
-            setForm({
-                ...form,
-                grossWeight: name
-            });
-        }
-        else {
-            setSelectGrossWeight([opt[0].value]);
-            setForm({
-                ...form,
-                grossWeight: opt[0].label
-            });
-        }
-    }
-    const setSelectLoadingTermFunc = (val, opt) => {
-        if (!val || val.length === 0) {
-            setSelectLoadingTerm(null);
-            setForm({ ...form, loadingTerm: "" });
-            return;
-        }
-        if (val.length > 1) return;
-        if (!opt[0].value) {
-            const name = val[0];
-            setSelectLoadingTerm([name]);
-            setForm({
-                ...form,
-                loadingTerm: name
-            });
-        }
-        else {
-            setSelectLoadingTerm([opt[0].value]);
-            setForm({
-                ...form,
-                loadingTerm: opt[0].label
-            });
-        }
-    }
-    const setSelectNetWeightFunc = (val, opt) => {
-        if (!val || val.length === 0) {
-            setSelectNetWeight(null);
-            setForm({ ...form, netWeight: "" });
-            return;
-        }
-        if (val.length > 1) return;
-        if (!opt[0].value) {
-            const name = val[0];
-            setSelectNetWeight([name]);
-            setForm({
-                ...form,
-                netWeight: name
-            });
-        }
-        else {
-            setSelectNetWeight([opt[0].value]);
-            setForm({
-                ...form,
-                netWeight: opt[0].label
-            });
-        }
-    }
-    const setSelectNoOfContainerFunc = (val, opt) => {
-        if (!val || val.length === 0) {
-            setSelectNoOfContainer(null);
-            setForm({ ...form, noOfContainer: "" });
-            return;
-        }
-        if (val.length > 1) return;
-        if (!opt[0].value) {
-            const name = val[0];
-            setSelectNoOfContainer([name]);
-            setForm({
-                ...form,
-                noOfContainer: name
-            });
-        }
-        else {
-            setSelectNoOfContainer([opt[0].value]);
-            setForm({
-                ...form,
-                noOfContainer: opt[0].label
-            });
-        }
-    }
-    const setSelectPortOfDischargeFunc = (val, opt) => {
-        if (!val || val.length === 0) {
-            setSelectPortOfDischarge(null);
-            setForm({ ...form, portOfDischarge: "" });
-            return;
-        }
-        if (val.length > 1) return;
-        if (!opt[0].value) {
-            const name = val[0];
-            setSelectPortOfDischarge([name]);
-            setForm({
-                ...form,
-                portOfDischarge: name
-            });
-        }
-        else {
-            setSelectPortOfDischarge([opt[0].value]);
-            setForm({
-                ...form,
-                portOfDischarge: opt[0].label
-            });
-        }
-    }
-    const setSelectPortOfLoadingFunc = (val, opt) => {
-        if (!val || val.length === 0) {
-            setSelectPortOfLoading(null);
-            setForm({ ...form, portOfLoading: "" });
-            return;
-        }
-        if (val.length > 1) return;
-        if (!opt[0].value) {
-            const name = val[0];
-            setSelectPortOfLoading([name]);
-            setForm({
-                ...form,
-                portOfLoading: name
-            });
-        }
-        else {
-            setSelectPortOfLoading([opt[0].value]);
-            setForm({
-                ...form,
-                portOfLoading: opt[0].label
-            });
-        }
-    }
-    const setSelectShippingLineFunc = (val, opt) => {
-        if (!val || val.length === 0) {
-            setSelectShippingLine(null);
-            setForm({ ...form, shippingLine: "" });
-            return;
-        }
-        if (val.length > 1) return;
-        if (!opt[0].value) {
-            const name = val[0];
-            setSelectShippingLine([name]);
-            setForm({
-                ...form,
-                shippingLine: name
-            });
-        }
-        else {
-            setSelectShippingLine([opt[0].value]);
-            setForm({
-                ...form,
-                shippingLine: opt[0].label
-            });
-        }
-    }
-    const setSelectVesselFunc = (val, opt) => {
-        if (!val || val.length === 0) {
-            setSelectVessel(null);
-            setForm({ ...form, vessel: "" });
-            return;
-        }
-        if (val.length > 1) return;
-        if (!opt[0].value) {
-            const name = val[0];
-            setSelectVessel([name]);
-            setForm({
-                ...form,
-                vessel: name
-            });
-        }
-        else {
-            setSelectVessel([opt[0].value]);
-            setForm({
-                ...form,
-                vessel: opt[0].label
-            });
-        }
-    }
 
     //Fetch Data
     useEffect(() => {
@@ -596,13 +373,13 @@ function EditJob() {
     };
 
     const validateMessages = {
-        required: '${label} is required!',
+        required: `${label} is required!`,
         types: {
-            email: '${label} is not a valid email!',
-            number: '${label} is not a valid number!',
+            email: `${label} is not a valid email!`,
+            number: `${label} is not a valid number!`,
         },
         number: {
-            range: '${label} must be between ${min} and ${max}',
+            range: `${label} must be between ${min} and ${max}`,
         },
     };
 
@@ -716,7 +493,6 @@ function EditJob() {
                                             variant="underlined"
                                             placeholder="Type to find a customer..."
                                             options={customerOpt || []}
-                                            // value={selectCustomer}
                                             onChange={setSelectCustomerFunc}
                                         />
                                     </Form.Item>

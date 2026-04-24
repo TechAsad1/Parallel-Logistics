@@ -40,7 +40,7 @@ function Users() {
 
     useEffect(() => {
         dispatch(getUser());
-    }, []);
+    }, [dispatch]);
 
     const {
         token: { colorBgContainer, borderRadiusLG },

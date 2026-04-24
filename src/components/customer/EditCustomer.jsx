@@ -51,7 +51,7 @@ function EditCustomer({ open, onClose, selectedCustomer }) {
     };
 
     const validateMessages = {
-        required: '${label} is required!',
+        required: `${label} is required!`,
     };
 
     return (

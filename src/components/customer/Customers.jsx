@@ -40,7 +40,7 @@ function Customers() {
 
     useEffect(() => {
         dispatch(getCustomer());
-    }, []);
+    }, [dispatch]);
 
     const {
         token: { colorBgContainer, borderRadiusLG },

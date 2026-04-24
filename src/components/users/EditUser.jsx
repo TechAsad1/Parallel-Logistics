@@ -57,7 +57,7 @@ function EditUser({ open, onClose, selectedUser }) {
     };
 
     const validateMessages = {
-        required: '${label} is required!',
+        required: `${label} is required!`,
     };
 
     return (

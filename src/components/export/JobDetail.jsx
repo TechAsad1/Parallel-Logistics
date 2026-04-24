@@ -51,7 +51,7 @@ const JobDetail = () => {
     dispatch(getShippingLine());
     dispatch(getVessel());
     dispatch(getJobType());
-  }, []);
+  }, [dispatch]);
   useEffect(() => {
     dispatch(jobById(id));
   }, [id]);

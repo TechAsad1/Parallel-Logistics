@@ -8,7 +8,6 @@ import { useEffect, useState } from 'react';
 import { formatDate } from '../Helper';
 import { useDispatch, useSelector } from 'react-redux';
 import { getCargo, getCustomer, getGrossWeight, getJobType, getLoadingTerm, getNetWeight, getNoOfContainer, getPortOfDischarge, getPortOfLoading, getShippingLine, getVessel, insertJob, maxIdJob } from '../../redux/Action';
-// import { format } from "date-fns";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import React from "react";
@@ -90,7 +89,7 @@ function NewJob() {
             EtaPod: dayjs()
         });
         loadStates();
-    }, []);
+    }, [dispatch]);
 
 
     //CargoDetail
@@ -568,13 +567,13 @@ function NewJob() {
     };
 
     const validateMessages = {
-        required: '${label} is required!',
+        required: `${label} is required!`,
         types: {
-            email: '${label} is not a valid email!',
-            number: '${label} is not a valid number!',
+            email: `${label} is not a valid email!`,
+            number: `${label} is not a valid number!`,
         },
         number: {
-            range: '${label} must be between ${min} and ${max}',
+            range: `${label} must be between ${min} and ${max}`,
         },
     };
 
