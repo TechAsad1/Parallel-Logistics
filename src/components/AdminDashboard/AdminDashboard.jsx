@@ -265,7 +265,7 @@ const AdminDashboard = () => {
       setSelectUser(null);
       return;
     }
-    const usr = userOpt.find(x => x.value == val);
+    const usr = userOpt.find(x => x.value === val);
     setSelectUser(usr);
     setUserId(usr.value);
   }

@@ -48,7 +48,7 @@ function Jobs() {
     }, [dispatch]);
 
     useEffect(() => {
-        if (isAdmin == 'true')
+        if (isAdmin === 'true')
             dispatch(getJob());
         else
             dispatch(getJobByUserId(user));
@@ -373,19 +373,19 @@ function Jobs() {
             setSelectUser(null);
             return;
         }
-        const usr = userOpt.find(x => x.value == val);
+        const usr = userOpt.find(x => x.value === val);
         setSelectUser(usr);
     }
 
     useEffect(() => {
         if (selectedJob?.jobAssignId > 0) {
-            const usr = userOpt.find(x => x.value == selectedJob?.userId);
+            const usr = userOpt.find(x => x.value === selectedJob?.userId);
             setSelectUser(usr);
             forms.setFieldsValue({
                 User: [usr]
             });
         }
-    }, [forms, modalOpen]);
+    }, [forms, selectedJob, modalOpen]);
 
 
     //PDF
@@ -411,7 +411,7 @@ function Jobs() {
         pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
         pdf.save(`job-${selectedJob.jobId}.pdf`);
     };
-    
+
     const columnsPDF = [
         {
             title: "Cargo Description",
@@ -428,7 +428,7 @@ function Jobs() {
 
     return (
         <>
-            <Layout style={{minHeight:'100vh'}}>
+            <Layout style={{ minHeight: '100vh' }}>
                 <SideBar />
                 <Content style={{ margin: '0 16px' }}>
                     <div className="header d-flex justify-content-between align-items-center">

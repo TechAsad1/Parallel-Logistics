@@ -40,7 +40,7 @@ const Dashboard = () => {
     dispatch(GetJobProgressByUserIdAsync(user, fromDate, toDate));
     dispatch(GetJobSummaryMonthWiseByUserIdAsync(user, fromDate, toDate));
     dispatch(GetJobSummaryCountByUserIdAsync(user, fromDate, toDate));
-  }, [dispatch, fromDate, toDate]);
+  }, [dispatch, user, fromDate, toDate]);
   const pieData = [
     { id: 0, value: jobSummaryCountArrs?.totalJobs, label: "Total" },
     { id: 1, value: jobSummaryCountArrs?.activeJobs, label: "In Progress" },

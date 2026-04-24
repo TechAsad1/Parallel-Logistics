@@ -1,11 +1,10 @@
 
 import Swal from 'sweetalert2';
-import { Button, Layout, theme, Select, Typography, Row, Col, DatePicker } from 'antd';
+import { Button, Layout, theme, Select, Row, Col, DatePicker } from 'antd';
 import { Link, useParams } from 'react-router-dom';
 import { Form, Input, InputNumber } from 'antd';
 import dayjs from 'dayjs';
 import { useEffect, useState } from 'react';
-import { formatDate } from '../Helper';
 import { useDispatch, useSelector } from 'react-redux';
 import { getCargo, getCustomer, getGrossWeight, getJobType, getLoadingTerm, getNetWeight, getNoOfContainer, getPortOfDischarge, getPortOfLoading, getShippingLine, getVessel, jobById, updateJob } from '../../redux/Action';
 import { Navigate } from "react-router-dom";

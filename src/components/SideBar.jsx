@@ -86,7 +86,7 @@ const SideBar = () => {
                 className="custom-collapse-btn"
                 icon={collapsed ? <DoubleRightOutlined /> : <DoubleLeftOutlined />}
             />
-            <Menu defaultSelectedKeys={['3']} mode="inline" selectedKeys={[selectedKeyMap[location.pathname]]} items={isAdmin == "true" ? adminNav : nav}
+            <Menu defaultSelectedKeys={['3']} mode="inline" selectedKeys={[selectedKeyMap[location.pathname]]} items={isAdmin === "true" ? adminNav : nav}
                 onClick={({ key }) => {
                     if (key === "7") {
                         handleLogout();
