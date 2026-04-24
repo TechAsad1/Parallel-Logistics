@@ -68,8 +68,18 @@ function EditJob() {
     }
 
     useEffect(() => {
-        loadStates();
-    }, [loadStates, dispatch]);
+        dispatch(getCargo());
+        dispatch(getCustomer());
+        dispatch(getGrossWeight());
+        dispatch(getNetWeight());
+        dispatch(getNoOfContainer());
+        dispatch(getPortOfLoading());
+        dispatch(getPortOfDischarge());
+        dispatch(getLoadingTerm());
+        dispatch(getShippingLine());
+        dispatch(getVessel());
+        dispatch(getJobType());
+    }, [dispatch]);
 
     //CargoDetail
     useEffect(() => {
@@ -279,7 +289,7 @@ function EditJob() {
                 Dates: singleJobArrs?.createdDate ? dayjs(singleJobArrs?.createdDate) : dayjs(new Date().toISOString()),
             });
         }
-    }, [customerArrs, customerOpt, form, forms, singleJobArrs]);
+    }, [customerArrs, customerOpt, forms, singleJobArrs]);
 
     //============= Update ============
     const updateFunc = (x) => {

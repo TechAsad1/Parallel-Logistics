@@ -84,8 +84,19 @@ function NewJob() {
             EtdPol: dayjs(),
             EtaPod: dayjs()
         });
-        loadStates();
-    }, [forms, loadStates, dispatch]);
+        dispatch(getCargo());
+        dispatch(getCustomer());
+        dispatch(getGrossWeight());
+        dispatch(getNetWeight());
+        dispatch(getNoOfContainer());
+        dispatch(getPortOfLoading());
+        dispatch(getPortOfDischarge());
+        dispatch(getLoadingTerm());
+        dispatch(getShippingLine());
+        dispatch(getVessel());
+        dispatch(getJobType());
+        dispatch(maxIdJob());
+    }, [forms, dispatch]);
 
 
     //CargoDetail
