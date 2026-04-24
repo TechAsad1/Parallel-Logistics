@@ -13,13 +13,10 @@ import jsPDF from "jspdf";
 import React from "react";
 import { Navigate } from "react-router-dom";
 import logo from '../images/logo.jpeg';
-import { CgSoftwareDownload } from "react-icons/cg";
 import { FaEye } from "react-icons/fa";
 import SideBar from '../SideBar.jsx'
 
 const { Content } = Layout;
-
-const { Text } = Typography;
 
 function NewJob() {
     const dispatch = useDispatch();
@@ -212,7 +209,6 @@ function NewJob() {
 
 
     //Options
-    const initialOpt = [{ value: "Choose Option", label: "Choose Option" }];
     const [cargoOpt, setCargoOpt] = useState();
     const [customerOpt, setCustomerOpt] = useState();
     const [grossWeightOpt, setGrossWeightOpt] = useState();
@@ -226,20 +222,9 @@ function NewJob() {
     const [vesselOpt, setVesselOpt] = useState();
 
     //Select State
-    const [selectCargo, setSelectCargo] = useState(setCargoOpt);
     const [selectCustomer, setSelectCustomer] = useState(setCustomerOpt);
-    const [selectGrossWeight, setSelectGrossWeight] = useState(setGrossWeightOpt);
-    const [selectJobType, setSelectJobType] = useState(setJobTypeOpt);
-    const [selectLoadingTerm, setSelectLoadingTerm] = useState(setLoadingTermOpt);
-    const [selectNetWeight, setSelectNetWeight] = useState(setNetWeightOpt);
-    const [selectNoOfContainer, setSelectNoOfContainer] = useState(setNoOfContainerOpt);
-    const [selectPortOfDischarge, setSelectPortOfDischarge] = useState(setPortOfDischargeOpt);
-    const [selectPortOfLoading, setSelectPortOfLoading] = useState(setPortOfLoadingOpt);
-    const [selectShippingLine, setSelectShippingLine] = useState(setShippingLineOpt);
-    const [selectVessel, setSelectVessel] = useState(setVesselOpt);
 
     const [form, setForm] = useState(initialForm);
-    const resetForm = () => setForm(initialForm);
 
     const [maxId, setMaxId] = useState("");
     const [insertJobArr, setInsertJobArr] = useState([]);
@@ -305,36 +290,6 @@ function NewJob() {
     const {
         token: { colorBgContainer, borderRadiusLG },
     } = theme.useToken();
-    const showConfirmationAlert = () => {
-        Swal.fire({
-            title: "Are you sure?",
-            text: "You won't be able to revert this!",
-            showCancelButton: true,
-            confirmButtonColor: "#00ff00",
-            confirmButtonText: "Yes, delete it!",
-            cancelButtonColor: "#ff0000",
-            cancelButtonText: "Cancel",
-        }).then((result) => {
-            if (result.isConfirmed) {
-                Swal.fire({
-                    title: "Deleted!",
-                    text: "Your file has been deleted.",
-                    className: "btn btn-success",
-                    confirmButtonText: "OK",
-                    customClass: {
-                        confirmButton: "btn btn-success",
-                    },
-                });
-                // dispatch(deleteArea(id));
-            } else {
-                Swal.close();
-            }
-        });
-    };
-    const layout = {
-        labelCol: { span: 16 },
-        wrapperCol: { span: 8 },
-    };
 
     const validateMessages = {
         required: '${label} is required!',
@@ -398,7 +353,6 @@ function NewJob() {
         pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
         pdf.save(`job-${insertJobArr.jobId}.pdf`);
     };
-    const formValues = forms.getFieldsValue();
     const columns = [
         {
             title: "Cargo Description",

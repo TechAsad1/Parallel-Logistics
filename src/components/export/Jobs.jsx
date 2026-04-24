@@ -12,7 +12,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useState, useRef } from 'react';
 import { getJobByUserId, getJob, deleteJob, getUser, existsJobAssign, updateJobCheckStatus } from '../../redux/Action';
 import { formatDateString } from '../Helper';
-import jobMan from "../images/jobMan.png";
 import dayjs from 'dayjs';
 import { formatDate } from '../Helper';
 import { MdSupportAgent } from "react-icons/md";
@@ -46,14 +45,14 @@ function Jobs() {
 
     useEffect(() => {
         dispatch(getUser());
-    }, []);
+    }, [dispatch]);
 
     useEffect(() => {
         if (isAdmin == 'true')
             dispatch(getJob());
         else
             dispatch(getJobByUserId(user));
-    }, [user, isAdmin]);
+    }, [user, isAdmin, dispatch]);
 
     useEffect(() => {
         setRawData(jobArrs);
@@ -412,7 +411,7 @@ function Jobs() {
         pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
         pdf.save(`job-${selectedJob.jobId}.pdf`);
     };
-    const formValues = forms.getFieldsValue();
+    
     const columnsPDF = [
         {
             title: "Cargo Description",
