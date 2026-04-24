@@ -27,7 +27,7 @@ const SideBar = () => {
         if (!user) {
             navigate("/login");
         }
-    }, [location.pathname]);
+    }, [navigate,location.pathname]);
 
     //Navbar
     const items = [

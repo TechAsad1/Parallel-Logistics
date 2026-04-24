@@ -1,11 +1,10 @@
 
 import Swal from 'sweetalert2';
-import { Button, Layout, theme, Select, Typography, Row, Col, DatePicker, Modal, Divider, Table, Space } from 'antd';
+import { Button, Layout, theme, Select, Row, Col, DatePicker, Modal, Divider, Table, Space } from 'antd';
 import { Link } from 'react-router-dom';
 import { Form, Input, InputNumber } from 'antd';
 import dayjs from 'dayjs';
 import { useEffect, useState } from 'react';
-import { formatDate } from '../Helper';
 import { useDispatch, useSelector } from 'react-redux';
 import { getCargo, getCustomer, getGrossWeight, getJobType, getLoadingTerm, getNetWeight, getNoOfContainer, getPortOfDischarge, getPortOfLoading, getShippingLine, getVessel, insertJob, maxIdJob } from '../../redux/Action';
 import html2canvas from "html2canvas";
@@ -86,7 +85,7 @@ function NewJob() {
             EtaPod: dayjs()
         });
         loadStates();
-    }, [dispatch]);
+    }, [forms, dispatch]);
 
 
     //CargoDetail

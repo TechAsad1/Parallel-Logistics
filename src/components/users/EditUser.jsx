@@ -17,14 +17,14 @@ function EditUser({ open, onClose, selectedUser }) {
     const [forms] = Form.useForm();
     const [showPassword, setShowPassword] = useState(false);
 
-    useEffect(() => { dispatch(getUserById(selectedUser?.userId)); }, [open, selectedUser]);
+    useEffect(() => { dispatch(getUserById(selectedUser?.userId)); }, [dispatch, open, selectedUser]);
 
     useEffect(() => {
         forms.setFieldsValue({
             userId: singleUserArrs?.userId, userName: singleUserArrs?.userName, designation: singleUserArrs?.designation, password: singleUserArrs?.password, isAdmin: singleUserArrs?.isAdmin
         });
         setShowPassword(false);
-    }, [singleUserArrs]);
+    }, [forms, singleUserArrs]);
 
     const handleOk = async () => {
         try {

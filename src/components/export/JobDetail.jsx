@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
 import { Button, Typography, Layout } from 'antd';
-import { createStyles } from 'antd-style';
 import { Link, useParams } from 'react-router-dom';
 import { Content } from 'antd/es/layout/layout';
 import { EditOutlined, EllipsisOutlined, SettingOutlined } from '@ant-design/icons';
@@ -38,7 +37,7 @@ const JobDetail = () => {
   }, [dispatch]);
   useEffect(() => {
     dispatch(jobById(id));
-  }, [id]);
+  }, [dispatch, id]);
   const user = localStorage.getItem("user");
   if (!user) return <Navigate to="/login" />;
 

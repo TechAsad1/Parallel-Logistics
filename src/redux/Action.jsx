@@ -212,7 +212,7 @@ export const getJob = () => async (dispatch) => {
 };
 export const getJobByUserId = (id) => async (dispatch) => {
   try {
-    const rec = await api.get("Job/JobsByUserIdAsync/" + `${id}`);
+    const rec = await api.get(`Job/JobsByUserIdAsync/${id}`);
     dispatch({ type: "jobsByUserIdResponse", payload: rec.data });
   }
   catch (err) {
@@ -746,7 +746,7 @@ export const updateJobAssign = (id, x) => async (dispatch) => {
 };
 export const existsJobAssign = (id, x) => async (dispatch) => {
   try {
-    await api.get('JobAssign/ExistsAsync?id=' + `${id}`).then((e) => {
+    await api.get(`JobAssign/ExistsAsync?id=${id}`).then((e) => {
       if (e.data === true && id > 0)
         dispatch(updateJobAssign(id, x));
       else

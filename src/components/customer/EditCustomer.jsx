@@ -11,14 +11,14 @@ function EditCustomer({ open, onClose, selectedCustomer }) {
 
     const [forms] = Form.useForm();
 
-    useEffect(() => { dispatch(getCustomerById(selectedCustomer?.customerId)); }, [open, selectedCustomer]);
+    useEffect(() => { dispatch(getCustomerById(selectedCustomer?.customerId)); }, [dispatch,open, selectedCustomer]);
 
     useEffect(() => {
         forms.setFieldsValue({
             customerId: singleCustomerArrs?.customerId, customerName: singleCustomerArrs?.customerName, contact: singleCustomerArrs?.contact,
             email: singleCustomerArrs?.email, address: singleCustomerArrs?.address
         });
-    }, [singleCustomerArrs]);
+    }, [forms,singleCustomerArrs]);
 
     const handleOk = async () => {
         try {
