@@ -40,7 +40,7 @@ const AdminDashboard = () => {
 
   useEffect(() => {
     dispatch(getUser());
-  }, []);
+  }, [dispatch]);
 
   useEffect(() => {
     setUserOpt([]); // Reset
@@ -63,7 +63,7 @@ const AdminDashboard = () => {
       dispatch(GetJobSummaryMonthWiseAsync(fromDate, toDate));
       dispatch(GetJobSummaryCountAsync(fromDate, toDate));
     }
-  }, [userId, fromDate, toDate]);
+  }, [userId, fromDate, toDate, dispatch]);
 
   // 🥧 Pie Data
   const pieData = [
